@@ -1,0 +1,106 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+%\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+
+
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+% Custom personalization
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\parskip 1ex
+\parindent 0pt
+\usepackage[spanish]{babel}
+\usepackage{csquotes}
+\usepackage{hyperref}
+\usepackage[backend=biber,style=ieee]{biblatex} %imports biblatex
+\addbibresource{references.bib}  %Import the bibliography file
+
+
+\begin{document}
+
+\title{BATS: Bridging Acoustic Transparency in Speech}
+
+\author{\IEEEauthorblockN{Diego Quezada}
+\IEEEauthorblockA{\textit{Departamento de Informática} \\
+\textit{Universidad Técnica Federico Santa María}\\
+Valparaíso, Chile \\
+diego.quezadac@sansano.usm.cl}
+\and
+\IEEEauthorblockN{Felipe Cisternas}
+\IEEEauthorblockA{\textit{Departamento de Informática} \\
+\textit{Universidad Técnica Federico Santa María}\\
+Valparaíso, Chile \\
+felipe.cisternasal@sansano.usm.cl}}
+
+\maketitle
+
+\begin{abstract}
+
+El reconocimiento de voz se basa en representaciones de señales acústicas, como espectrogramas y MFCCs. Sin embargo, los modelos actuales son en gran medida opacos en cuanto a cómo toman decisiones en este proceso. La naturaleza física de los datos de entrada en el reconocimiento de voz agrega una capa adicional de complejidad, lo que plantea el desafío de mejorar la transparencia y la comprensión de estos modelos para garantizar un reconocimiento de voz más preciso y confiable.
+
+\end{abstract}
+
+\begin{IEEEkeywords}
+ASR, XAI, CNN, RNN, Transformers
+\end{IEEEkeywords}
+
+\section{Introducción}
+
+El reconocimiento de voz, o más conocido en inglés como \textit{speech recognition}, es la tarea de asignar una secuencia de palabras a señales acústicas que contienen lenguaje hablado. 
+Implica reconocer las palabras pronunciadas en una grabación de audio y transcribirlas a un formato escrito. El objetivo es transcribir con precisión el discurso en tiempo real o a partir de audio grabado, teniendo en cuenta factores como el acento, la velocidad del habla y el ruido de fondo.
+Cuando la transcripción se realiza en tiempo real se habla de reconocimiento automático de voz o \textit{Automatic Speech Recognition} (ASR) en inglés. Considerando $\mathbf{X} = (x^{(1)}, x^{(2)} ,\dots, x^{(T)})$ como una secuencia de audio de largo $T$ e $y = (y_1, y_2, \dots, y_N)$ como una secuencia de palabras de largo $N$ podemos definir la tarea de reconocimiento de voz de manera precisa mediante el siguiente problema de optimización:
+
+\begin{equation}
+    f^\ast(\mathbf{X}) = \argmax_{\mathbf{y}} P^\ast(\mathbf{y}| \mathbf{X} = X)
+\end{equation}
+
+Donde $P^\ast$ es la verdadera distribución de probabilidad condicional que relaciona las entradas $\mathbf{X}$ con las salidas $\mathbf{y}$ \cite{Goodfellow-et-al-2016}.
+
+La representación utilizada para $\mathbf{X}$ es de vital importancia para el desempeño de un modelo de reconocimiento de voz. La representación más simple es mediante una serie temporal univariada que modela la amplitud de la \textbf{señal de audio} en el tiempo. Al dividir la señal de audio en pequeñas ventanas de tiempo y calculando el espectro de frecuencia para cada ventana se obtiene un \textbf{espectrograma}: una representación visual de la señal de audio en el tiempo y en el dominio de la frecuencia. A partir del espectrograma se pueden extraer características de audio tales como los \textbf{coeficientes cepstrales de Mel} (MFCCs) que son ampliamente utilizados en la literatura para el reconocimiento de voz.
+
+Como es de esperarse, los modelos del estado del arte para el reconocimiento de voz son cajas negras, es decir, no es posible interpretar el proceso de decisión que realizan para asignar una secuencia de palabras a una señal de audio.  Por lo tanto, es necesario utilizar técnicas de \textit{eXplainable Artificial Intelligence} (XAI) para poder entender las decisiones de un modelo de reconocimiento de voz.
+
+En la presente investigación se trabajará con conjuntos de datos estándar para el reconocimiento de voz tales como  \href{https://catalog.ldc.upenn.edu/LDC93S1}{\textit{TIMIT}} \cite{timit} y \href{https://commonvoice.mozilla.org/en/datasets}{\textit{CommonVoice}} \cite{DBLP:journals/corr/abs-1912-06670}. Ambos distribuídos de manera gratuita y con licencia abierta.
+
+\section{Problema}
+
+Para lograr una mejor cohesión entre las dos ideas presentadas, es importante establecer una conexión clara entre los modelos específicos mencionados y la necesidad de explicabilidad en el contexto del reconocimiento de voz.
+
+En el campo del reconocimiento de voz, la elección del modelo y la arquitectura es crucial para abordar eficazmente los desafíos únicos que presenta esta área. Existen múltiples opciones disponibles, incluyendo modelos destacados como \textit{Whisper}, basado en la arquitectura de \textit{Transformers} de \textit{OpenAI}, que ha demostrado ser una herramienta poderosa en la tarea de \textit{speech recognition} \cite{radford2022robust}. Sin embargo, estos modelos avanzados a menudo carecen de explicabilidad, un aspecto que puede obstaculizar su robustez y la \textbf{confianza del usuario} en ellos.
+
+La explicabilidad no solo facilita una mayor comprensión del proceso de toma decisión del modelo, sino que también es vital para mejorar su robustez, especialmente cuando estos modelos se integran como \textbf{componentes centrales} en un \textit{software}. En este contexto, la explicabilidad se convierte en una herramienta indispensable para ganar la confianza de los usuarios en el producto final. A pesar de la importancia crítica de la explicabilidad, el reconocimiento de voz presenta desafíos adicionales debido a la naturaleza física de los datos de entrada, lo que complica la tarea de proporcionar explicaciones de alto nivel basadas en estos datos. Por lo tanto, mientras se busca avanzar en la precisión y eficiencia de estos modelos, es igualmente imperativo trabajar hacia soluciones que ofrezcan una mayor explicabilidad, equilibrando así la balanza entre el rendimiento y la comprensibilidad del modelo. 
+
+La pregunta de investigación que se aborda en el presente estudio es: ¿Cómo lograr una integración efectiva de explicabilidad en reconocimiento de voz?
+
+Esta investigación tiene como objetivo mejorar la comprensión de los modelos de reconocimiento de voz para que los usuarios, especialmente aquellos con discapacidades auditivas, puedan confiar en su funcionamiento.
+
+% Indicar motivación
+
+\section{Métodos}
+
+Se utilizarán los siguientes métodos de ML:
+
+\begin{enumerate}
+    \item CNNs para aprender patrones en los espectrogramas de audio.
+    \item RNNs para modelar la dependencia temporal de los espectrogramas de audio.
+    \item Transformers y mecanismos de atención \cite{vaswani2023attention} para aprender las características más importantes de los espectrogramas de audio.
+\end{enumerate}
+
+Respecto a los métodos de XAI, se utilizarán los siguientes:
+
+\begin{enumerate}
+    \item LIME \cite{ribeiro2016why} para identificar los atributos más importantes.
+    \item Grad-CAM \cite{DBLP:journals/corr/SelvarajuDVCPB16} para visualizar las regiones más importantes de los espectrogramas.
+    \item Métodos de prominencia para visualizar cuánto contribuye una característica de entrada al resultado del modelo.
+    \item Análisis de la matriz de atención para entender a qué características el modelo les asigna mayor importancia.
+\end{enumerate}
+
+\printbibliography
+\end{document}
