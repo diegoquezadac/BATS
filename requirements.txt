@@ -1,0 +1,14 @@
+torch 
+transformers
+soundfile
+deep-phonemizer
+kaldi_io
+librosa
+numpy==1.25
+matplotlib==3.7
+datasets
+datasets[audio]
+gradio
+evaluate
+jiwer
+ipykernel
