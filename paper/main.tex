@@ -67,8 +67,6 @@ La representación utilizada para $\mathbf{X}$ es de vital importancia para el d
 
 Como es de esperarse, los modelos del estado del arte para el reconocimiento de voz son cajas negras, es decir, no es posible interpretar el proceso de decisión que realizan para asignar una secuencia de palabras a una señal de audio.  Por lo tanto, es necesario utilizar técnicas de \textit{eXplainable Artificial Intelligence} (XAI) para poder entender las decisiones de un modelo de reconocimiento de voz.
 
-En la presente investigación se trabajará con conjuntos de datos estándar para el reconocimiento de voz tales como  \href{https://catalog.ldc.upenn.edu/LDC93S1}{\textit{TIMIT}} \cite{timit} y \href{https://commonvoice.mozilla.org/en/datasets}{\textit{CommonVoice}} \cite{DBLP:journals/corr/abs-1912-06670}. Ambos distribuídos de manera gratuita y con licencia abierta.
-
 \section{Problema}
 
 Para lograr una mejor cohesión entre las dos ideas presentadas, es importante establecer una conexión clara entre los modelos específicos mencionados y la necesidad de explicabilidad en el contexto del reconocimiento de voz.
@@ -81,9 +79,21 @@ La pregunta de investigación que se aborda en el presente estudio es: ¿Cómo l
 
 Esta investigación tiene como objetivo mejorar la comprensión de los modelos de reconocimiento de voz para que los usuarios, especialmente aquellos con discapacidades auditivas, puedan confiar en su funcionamiento.
 
-% Indicar motivación
+\section{Trabajo relacionado}
 
-\section{Métodos}
+\section{Metodología}
+
+\subsection{Marco teórico}
+
+\subsection{Conjunto de datos}
+
+En la presente investigación se utilizará el conjunto de datos \href{https://commonvoice.mozilla.org/en/datasets}{\textit{CommonVoice}} \cite{commonvoice:2020}. En particular, se utilizarán las grabaciones en inglés asociadas a la versión 11 de CommonVoice disponible en HuggingFace Datasets.
+
+Los conjunto de entrenamiento, validación y prueba consisten en 948736, 16354 y 16354 grabaciones de audio respectivamente. Cada grabación de audio tiene asociada una transcripción. Adicionalmente, cada grabación de audio fue grabada con un \textit{sampling rate} de 48 kHz.
+
+
+
+\subsection{Propuesta}
 
 Se utilizarán los siguientes métodos de ML:
 
@@ -101,6 +111,8 @@ Respecto a los métodos de XAI, se utilizarán los siguientes:
     \item Métodos de prominencia para visualizar cuánto contribuye una característica de entrada al resultado del modelo.
     \item Análisis de la matriz de atención para entender a qué características el modelo les asigna mayor importancia.
 \end{enumerate}
+
+\section{Resultados preliminares}
 
 \printbibliography
 \end{document}
