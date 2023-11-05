@@ -12,3 +12,4 @@ gradio
 evaluate
 jiwer
 ipykernel
+nltk
