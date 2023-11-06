@@ -1,4 +1,5 @@
-torch 
+torch
+torchaudio
 transformers
 soundfile
 deep-phonemizer
@@ -13,3 +14,4 @@ evaluate
 jiwer
 ipykernel
 nltk
+torcheval

@@ -17,3 +17,16 @@ La entrega consiste en un avance del artículo que debe contener, como mínimo, 
     2. Dataset.
     3. Propuesta.
 4. Resultados preliminares.
+
+## Uso
+
+Para ejecutar el código de este repositorio se necesita `Python 3.10` y las dependencias especificadas en el archivo `requirements.txt`. Se recomienda el uso de un entorno virtual para evitar conflictos con otras versiones de las dependencias.
+
+```bash
+conda create -n bats python=3.10
+conda activate bats
+pip install -r requirements.txt
+```
+
+
+
