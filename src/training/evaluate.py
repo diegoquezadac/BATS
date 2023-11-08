@@ -1,4 +1,3 @@
-# evaluate.py
 import torch
 
 def evaluate_model(model: torch.nn.Module, data_loader: torch.utils.data.DataLoader, device: torch.device, metrics: dict):

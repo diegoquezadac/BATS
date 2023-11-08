@@ -1,5 +1,5 @@
-from typing import Literal
 import torch
+from typing import Literal
 
 class CustomEarlyStopping:
     """
@@ -82,7 +82,7 @@ class CustomEarlyStopping:
         # Save the model state
         self.best_state = model.state_dict()
 
-    def load_best_state(self, model):
+    def load_best_state(self, model: torch.nn.Module):
         """
         Loads the best model state into the given model.
 
