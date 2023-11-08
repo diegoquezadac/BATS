@@ -67,7 +67,7 @@ La representación utilizada para $\mathbf{X}$ es de vital importancia para el d
 
 Como es de esperarse, los modelos del estado del arte para el reconocimiento de voz son cajas negras, es decir, no es posible interpretar el proceso de decisión que realizan para asignar una secuencia de palabras a una señal de audio.  Por lo tanto, es necesario utilizar técnicas de \textit{eXplainable Artificial Intelligence} (XAI) para poder entender las decisiones de un modelo de reconocimiento de voz.
 
-\section{Problema}
+\subsection{Problema}
 
 Para lograr una mejor cohesión entre las dos ideas presentadas, es importante establecer una conexión clara entre los modelos específicos mencionados y la necesidad de explicabilidad en el contexto del reconocimiento de voz.
 
@@ -79,9 +79,15 @@ La pregunta de investigación que se aborda en el presente estudio es: ¿Cómo l
 
 Esta investigación tiene como objetivo mejorar la comprensión de los modelos de reconocimiento de voz para que los usuarios, especialmente aquellos con discapacidades auditivas, puedan confiar en su funcionamiento.
 
-\section{Trabajo relacionado}
+\subsection{Trabajo relacionado}
 
-\section{Metodología}
+La explicabilidad en el reconocimiento de voz es un campo poco explorado pero de creciente interés, enfocado en hacer que los sistemas de inteligencia artificial sean transparentes y confiables.
+
+En \cite{wu2023trust} se aborda la tarea de \textbf{reconocimiento de fonemas} utilizando el conjunto de datos TIMIT \cite{timit} y el método LIME junto a dos variantes propuestas: LIME-WS y LIME-TS. El conjunto de datos TIMIT segmenta los distintos fonemas en los datos de entrada. Los autores utilizan como representación interpretable un vector que indica la presencia o ausencia de cada segmento de audio. El objetivo es identificar los segmentos más importantes para la predicción del siguiente fonema. Inicialmente, para la generación del vecindario se aplican máscaras aleatorias a los segmentos de TIMIT. Luego, considerando que al analizar un fonema es probable que solo los segmentos cercanos incidan en su identificación, LIME-WS solo aplica máscaras aleatorias a segmentos cercanos al fonema analizado y mantiene los lejanos constantes. Finalmente, en LIME-TS se consideran segmentos creados por un intervalo de tiempo en vez de los definidos por TIMIT y se aplica la misma idea de localidad que en LIME-WS.
+
+En \cite{DBLP:journals/corr/abs-2008-00582} se aborda la tarea de etiquetado de música. Los autores plantean la necesidad de dar \textbf{explicaciones audibles} y proponen audioLIME como una extensión de LIME que utiliza explicaciones basadas en separación de fuentes.
+
+\section{Método propuesto}
 
 \subsection{Marco teórico}
 
@@ -91,9 +97,7 @@ En la presente investigación se utilizará el conjunto de datos \href{https://c
 
 Los conjunto de entrenamiento, validación y prueba consisten en 948736, 16354 y 16354 grabaciones de audio respectivamente. Cada grabación de audio tiene asociada una transcripción. Adicionalmente, cada grabación de audio fue grabada con un \textit{sampling rate} de 48 kHz.
 
-
-
-\subsection{Propuesta}
+\subsection{Descripción propuesta}
 
 Se utilizarán los siguientes métodos de ML:
 
@@ -115,4 +119,5 @@ Respecto a los métodos de XAI, se utilizarán los siguientes:
 \section{Resultados preliminares}
 
 \printbibliography
+
 \end{document}
