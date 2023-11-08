@@ -1,7 +1,7 @@
 import torch
-from early_stopping import CustomEarlyStopping
+from src.training.early_stopping import CustomEarlyStopping
 
-def train_model(model: torch.nn.Module, train_loader: torch.utils.data.DataLoader, val_loader: torch.utils.data.DataLoader, epochs: int, criterion: torch.nn, optimizer: torch.optim, device: torch.device, early_stopping: CustomEarlyStopping = None):
+def train_model(model: torch.nn.Module, train_loader: torch.utils.data.DataLoader, val_loader: torch.utils.data.DataLoader, epochs: int, criterion: torch.nn, optimizer: torch.optim, early_stopping: CustomEarlyStopping = None):
     """
     Trains a PyTorch model with the given data loaders, criterion, and optimizer.
 
@@ -18,9 +18,6 @@ def train_model(model: torch.nn.Module, train_loader: torch.utils.data.DataLoade
     Returns:
         The trained model with the best validation loss if early stopping is used, otherwise the model after the last training epoch.
     """
-    # Move the model to the specified device (GPU or CPU)
-    model.to(device)
-    
     # Iterate over the entire dataset for a specified number of epochs
     for epoch in range(epochs):
         # Set the model to training mode
@@ -29,8 +26,6 @@ def train_model(model: torch.nn.Module, train_loader: torch.utils.data.DataLoade
 
         # Iterate over the training data
         for inputs, labels in train_loader:
-            # Move the inputs and labels to the specified device
-            inputs, labels = inputs.to(device), labels.to(device)
 
             # Zero the parameter gradients
             optimizer.zero_grad()
@@ -55,8 +50,6 @@ def train_model(model: torch.nn.Module, train_loader: torch.utils.data.DataLoade
         with torch.no_grad():
             # Iterate over the validation data
             for inputs, labels in val_loader:
-                # Move the inputs and labels to the specified device
-                inputs, labels = inputs.to(device), labels.to(device)
                 # Compute the model output
                 outputs = model(inputs)
                 # Compute the loss

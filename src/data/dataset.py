@@ -20,7 +20,7 @@ class CommonVoice(Dataset):
             streaming=streaming,
         )
 
-        self.dataset = self.dataset.select(range(100))
+        #self.dataset = self.dataset.select(range(100))
         self._preprocess()
         self.vocab = SimpleVocab(self.dataset, max_size=10000)
 
