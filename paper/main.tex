@@ -3,7 +3,8 @@
 %\usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
 
-
+\usepackage{bm}
+\usepackage{amsmath}
 \usepackage{algorithmic}
 \usepackage{graphicx}
 \usepackage{textcomp}
@@ -53,6 +54,26 @@ ASR, XAI, CNN, RNN, Transformers
 
 \section{Introducción}
 
+Los modelos del estado del arte para el reconocimiento de voz son cajas negras, es decir, no es posible interpretar el proceso de decisión que realizan para asignar una secuencia de palabras a una señal de audio.  Por lo tanto, es necesario utilizar técnicas de \textit{eXplainable Artificial Intelligence} (XAI) para poder entender las decisiones de un modelo de reconocimiento de voz.
+
+En el campo del reconocimiento de voz, la elección del modelo y la arquitectura es crucial para abordar eficazmente los desafíos únicos que presenta esta área. Existen múltiples opciones disponibles, incluyendo modelos destacados como \textit{Whisper}, basado en la arquitectura de \textit{Transformers} de \textit{OpenAI} \cite{radford2022robust}. Sin embargo, estos modelos complejos por lo general carecen de explicabilidad, un aspecto que puede obstaculizar su robustez y la \textbf{confianza del usuario} en ellos.
+
+La explicabilidad no solo facilita una mayor comprensión del proceso de toma decisión del modelo, sino que también es vital para mejorar su robustez, especialmente cuando estos modelos se integran como \textbf{componentes centrales} en un \textit{software}. En este contexto, la explicabilidad se convierte en una herramienta indispensable para ganar la confianza de los usuarios en el producto final. A pesar de la importancia crítica de la explicabilidad, el reconocimiento de voz presenta desafíos adicionales debido a la naturaleza física de los datos de entrada, lo que complica la tarea de proporcionar explicaciones de alto nivel basadas en estos datos. Por lo tanto, mientras se busca avanzar en la precisión y eficiencia de estos modelos, es igualmente imperativo trabajar hacia soluciones que ofrezcan una mayor explicabilidad, equilibrando así la balanza entre el rendimiento y la comprensibilidad del modelo. 
+
+Esta investigación tiene como objetivo mejorar la comprensión de los modelos de reconocimiento de voz para que los usuarios, especialmente aquellos con discapacidades auditivas, puedan confiar en su funcionamiento.
+
+\subsection{Trabajo relacionado}
+
+En \cite{10094635} se aborda la tarea reconocimiento de voz utilizando utilizando el conjunto de datos CommonVoice \cite{commonvoice:2020} y tres sistemas de reconocimiento de voz: Google API, Sphinx y Deepspeech. Los autores plantean las explicaciones como un subconjunto de fotogramas de audio que son causas mínimas y suficientes de la transcripción. Para esto, adaptan las técnicas de clasificación de imagen SFL \cite{sun2020explaining} y explicaciones composicionales \cite{unknown} para luego compararlas con las ofrecidas por LIME \cite{ribeiro2016why}.
+
+En \cite{wu2023trust} se aborda la tarea de \textbf{reconocimiento de fonemas} utilizando el conjunto de datos TIMIT \cite{timit} y el método LIME junto a dos variantes propuestas: LIME-WS y LIME-TS. El conjunto de datos TIMIT segmenta los distintos fonemas en los datos de entrada. Los autores utilizan como representación interpretable un vector que indica la presencia o ausencia de cada segmento de audio. El objetivo es identificar los segmentos más importantes para la predicción del siguiente fonema. Inicialmente, para la generación del vecindario se aplican máscaras aleatorias a los segmentos de TIMIT. Luego, considerando que al analizar un fonema es probable que solo los segmentos cercanos incidan en su identificación, LIME-WS solo aplica máscaras aleatorias a segmentos cercanos al fonema analizado y mantiene los lejanos constantes. Finalmente, en LIME-TS se consideran segmentos creados por un intervalo de tiempo en vez de los definidos por TIMIT y se aplica la misma idea de localidad que en LIME-WS.
+
+En \cite{DBLP:journals/corr/abs-2008-00582} se aborda la tarea de etiquetado de música. Los autores plantean la necesidad de dar \textbf{explicaciones audibles} y proponen audioLIME como una extensión de LIME que utiliza explicaciones basadas en separación de fuentes.
+
+\section{Método propuesto}
+
+\subsection{Marco teórico}
+
 El reconocimiento de voz, o más conocido en inglés como \textit{speech recognition}, es la tarea de asignar una secuencia de palabras a señales acústicas que contienen lenguaje hablado. 
 Implica reconocer las palabras pronunciadas en una grabación de audio y transcribirlas a un formato escrito. El objetivo es transcribir con precisión el discurso en tiempo real o a partir de audio grabado, teniendo en cuenta factores como el acento, la velocidad del habla y el ruido de fondo.
 Cuando la transcripción se realiza en tiempo real se habla de reconocimiento automático de voz o \textit{Automatic Speech Recognition} (ASR) en inglés. Considerando $\mathbf{X} = (x^{(1)}, x^{(2)} ,\dots, x^{(T)})$ como una secuencia de audio de largo $T$ e $y = (y_1, y_2, \dots, y_N)$ como una secuencia de palabras de largo $N$ podemos definir la tarea de reconocimiento de voz de manera precisa mediante el siguiente problema de optimización:
@@ -65,31 +86,13 @@ Donde $P^\ast$ es la verdadera distribución de probabilidad condicional que rel
 
 La representación utilizada para $\mathbf{X}$ es de vital importancia para el desempeño de un modelo de reconocimiento de voz. La representación más simple es mediante una serie temporal univariada que modela la amplitud de la \textbf{señal de audio} en el tiempo. Al dividir la señal de audio en pequeñas ventanas de tiempo y calculando el espectro de frecuencia para cada ventana se obtiene un \textbf{espectrograma}: una representación visual de la señal de audio en el tiempo y en el dominio de la frecuencia. A partir del espectrograma se pueden extraer características de audio tales como los \textbf{coeficientes cepstrales de Mel} (MFCCs) que son ampliamente utilizados en la literatura para el reconocimiento de voz.
 
-Como es de esperarse, los modelos del estado del arte para el reconocimiento de voz son cajas negras, es decir, no es posible interpretar el proceso de decisión que realizan para asignar una secuencia de palabras a una señal de audio.  Por lo tanto, es necesario utilizar técnicas de \textit{eXplainable Artificial Intelligence} (XAI) para poder entender las decisiones de un modelo de reconocimiento de voz.
+LIME \cite{ribeiro2016why} es un modelo agnóstico que explica de manera local las predicciones de un modelo \textbf{caja negra} $f$ mediante la aproximación de $f$ con un modelo \textbf{explicable} $g$ en una vecindad de la instancia de interés $\bm{x}$. LIME utiliza una \textbf{representación interpretable} $\bm{x^\prime} \in \{0,1\}^{d^\prime}$ de la instancia $\bm{x} \in \mathbb{R}^d$. De esta forma, el dominio de la explicación $g$ es $\{0,1\}^{d^\prime}$ y, por lo tanto, $g$ actúa sobre la presencia o ausencia de \textit{componentes interpretables}. Para generar la vecindad se utiliza una función $\pi_x(z)$ que mide la distancia entre dos puntos $x$ y $z$ en el espacio de atributos interpretable. Adicionalmente, dado que la idea es aproximar $f$ mediante un modelo interpretable, se considera una penalización $\Omega$ que mide la complejidad de $g$. Finalmente, y considerando una función de pérdida $\mathcal{L}(f, g, \pi_x)$ que mide la imprecisión del modelo $g$ al aproximar $f$ en la vecindad de $\bm{x}$ de acuerdo a la función de distancia $\pi$, la explicación producida por LIME que asegura \textbf{interpretabilidad} y \textbf{fidelidad local} se obtiene según la siguiente fórmula:
 
-\subsection{Problema}
+\begin{equation}
+    \xi(\bm{x}) = \argmin_{g \in G} \mathcal{L}(f, g, \pi_x) + \Omega(g).
+\end{equation}
 
-Para lograr una mejor cohesión entre las dos ideas presentadas, es importante establecer una conexión clara entre los modelos específicos mencionados y la necesidad de explicabilidad en el contexto del reconocimiento de voz.
-
-En el campo del reconocimiento de voz, la elección del modelo y la arquitectura es crucial para abordar eficazmente los desafíos únicos que presenta esta área. Existen múltiples opciones disponibles, incluyendo modelos destacados como \textit{Whisper}, basado en la arquitectura de \textit{Transformers} de \textit{OpenAI}, que ha demostrado ser una herramienta poderosa en la tarea de \textit{speech recognition} \cite{radford2022robust}. Sin embargo, estos modelos avanzados a menudo carecen de explicabilidad, un aspecto que puede obstaculizar su robustez y la \textbf{confianza del usuario} en ellos.
-
-La explicabilidad no solo facilita una mayor comprensión del proceso de toma decisión del modelo, sino que también es vital para mejorar su robustez, especialmente cuando estos modelos se integran como \textbf{componentes centrales} en un \textit{software}. En este contexto, la explicabilidad se convierte en una herramienta indispensable para ganar la confianza de los usuarios en el producto final. A pesar de la importancia crítica de la explicabilidad, el reconocimiento de voz presenta desafíos adicionales debido a la naturaleza física de los datos de entrada, lo que complica la tarea de proporcionar explicaciones de alto nivel basadas en estos datos. Por lo tanto, mientras se busca avanzar en la precisión y eficiencia de estos modelos, es igualmente imperativo trabajar hacia soluciones que ofrezcan una mayor explicabilidad, equilibrando así la balanza entre el rendimiento y la comprensibilidad del modelo. 
-
-La pregunta de investigación que se aborda en el presente estudio es: ¿Cómo lograr una integración efectiva de explicabilidad en reconocimiento de voz?
-
-Esta investigación tiene como objetivo mejorar la comprensión de los modelos de reconocimiento de voz para que los usuarios, especialmente aquellos con discapacidades auditivas, puedan confiar en su funcionamiento.
-
-\subsection{Trabajo relacionado}
-
-La explicabilidad en el reconocimiento de voz es un campo poco explorado pero de creciente interés, enfocado en hacer que los sistemas de inteligencia artificial sean transparentes y confiables.
-
-En \cite{wu2023trust} se aborda la tarea de \textbf{reconocimiento de fonemas} utilizando el conjunto de datos TIMIT \cite{timit} y el método LIME junto a dos variantes propuestas: LIME-WS y LIME-TS. El conjunto de datos TIMIT segmenta los distintos fonemas en los datos de entrada. Los autores utilizan como representación interpretable un vector que indica la presencia o ausencia de cada segmento de audio. El objetivo es identificar los segmentos más importantes para la predicción del siguiente fonema. Inicialmente, para la generación del vecindario se aplican máscaras aleatorias a los segmentos de TIMIT. Luego, considerando que al analizar un fonema es probable que solo los segmentos cercanos incidan en su identificación, LIME-WS solo aplica máscaras aleatorias a segmentos cercanos al fonema analizado y mantiene los lejanos constantes. Finalmente, en LIME-TS se consideran segmentos creados por un intervalo de tiempo en vez de los definidos por TIMIT y se aplica la misma idea de localidad que en LIME-WS.
-
-En \cite{DBLP:journals/corr/abs-2008-00582} se aborda la tarea de etiquetado de música. Los autores plantean la necesidad de dar \textbf{explicaciones audibles} y proponen audioLIME como una extensión de LIME que utiliza explicaciones basadas en separación de fuentes.
-
-\section{Método propuesto}
-
-\subsection{Marco teórico}
+Donde $G$ es el conjunto de todos los modelos interpretables considerados, como por ejemplo modelos lineales o árboles de decisión.
 
 \subsection{Conjunto de datos}
 
@@ -99,22 +102,7 @@ Los conjunto de entrenamiento, validación y prueba consisten en 948736, 16354 y
 
 \subsection{Descripción propuesta}
 
-Se utilizarán los siguientes métodos de ML:
-
-\begin{enumerate}
-    \item CNNs para aprender patrones en los espectrogramas de audio.
-    \item RNNs para modelar la dependencia temporal de los espectrogramas de audio.
-    \item Transformers y mecanismos de atención \cite{vaswani2023attention} para aprender las características más importantes de los espectrogramas de audio.
-\end{enumerate}
-
-Respecto a los métodos de XAI, se utilizarán los siguientes:
-
-\begin{enumerate}
-    \item LIME \cite{ribeiro2016why} para identificar los atributos más importantes.
-    \item Grad-CAM \cite{DBLP:journals/corr/SelvarajuDVCPB16} para visualizar las regiones más importantes de los espectrogramas.
-    \item Métodos de prominencia para visualizar cuánto contribuye una característica de entrada al resultado del modelo.
-    \item Análisis de la matriz de atención para entender a qué características el modelo les asigna mayor importancia.
-\end{enumerate}
+La propuesta busca evaluar la explicabilidad de modelos estado del arte en la tarea de reconocimiento de voz mediante métodos \textbf{post-hoc}.
 
 \section{Resultados preliminares}
 
