@@ -1,17 +1,16 @@
 \documentclass[conference]{IEEEtran}
 \IEEEoverridecommandlockouts
 %\usepackage{cite}
-\usepackage{amsmath,amssymb,amsfonts}
-
+\usepackage{amssymb,amsfonts}
 \usepackage{bm}
 \usepackage{amsmath}
-\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
-
 % Custom personalization
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
@@ -20,9 +19,8 @@
 \usepackage[spanish]{babel}
 \usepackage{csquotes}
 \usepackage{hyperref}
-\usepackage[backend=biber,style=ieee]{biblatex} %imports biblatex
-\addbibresource{references.bib}  %Import the bibliography file
-
+\usepackage[backend=biber,style=ieee]{biblatex}
+\addbibresource{references.bib}
 
 \begin{document}
 
@@ -94,6 +92,26 @@ LIME \cite{ribeiro2016why} es un modelo agnóstico que explica de manera local l
 
 Donde $G$ es el conjunto de todos los modelos interpretables considerados, como por ejemplo modelos lineales o árboles de decisión.
 
+El borrado de representaciones \cite{li2017understanding} es un método \textbf{post-hoc} y \textbf{modelo agnóstico}, que consiste en eliminar características del input y ver como varían las predicciones del modelo, para así determinar las características más importantes a la hora de predecir.
+En esta investigación, analizaremos e interpretaremos las decisiones de un modelo de caja negra observando los efectos al borrar varias partes de la representación, en este caso como lo pueden ser las distintas dimensiones de los MFCCs. Sea $f$ un modelo neuronal de ASR, dado un ejemplo $e \in E$ con una transcripción $t$, calcularemos el score de una métrica $M$ con la siguiente fórmula:
+\begin{equation}
+    S_{M}(e,t) = M(t, f(e))
+\end{equation}
+Ahora sea $d$ una dimensión de nuestro vector $e$ la cual queremos explorar, denotaremos $S_{M}(e,t,\neg d)$ el score cuando la dimensión $d$ es removida; esto quiere decir que todos sus valores son 0.
+La importancia de la dimensión $d$ denotada por $I(d)$ estará dada por la diferencia relativa entre $S_{M}(e,t)$ y $S_{M}(e,t,\neg d)$:
+\begin{equation} \label{eq:imp}
+    I(d) = \frac{1}{|E|} \sum_{e \in E} \frac{S_{M}(e,t) - S_{M}(e,t,\neg d)}{S_{M}(e,t)}
+\end{equation}
+Para esto utilizaremos métricas ampliamente utilizadas al evaluar tareas de Automatic Speech Recognition (ASR) como lo son:
+\begin{itemize}
+    \item Word Error Rate (WER)
+    \item Match Error Rate (MER)
+    \item Word Information Lost (WIL)
+    \item Word Information Preserved (WIP)
+    \item Character Error Rate (CER)
+\end{itemize}
+Y calcularemos la importancia de cada dimensión con cada métrica dada la diferencia relativa entre los outputs del modelo.
+
 \subsection{Conjunto de datos}
 
 En la presente investigación se utilizará el conjunto de datos \href{https://commonvoice.mozilla.org/en/datasets}{\textit{CommonVoice}} \cite{commonvoice:2020}. En particular, se utilizarán las grabaciones en inglés asociadas a la versión 11 de CommonVoice disponible en HuggingFace Datasets.
@@ -104,17 +122,63 @@ Los conjunto de entrenamiento, validación y prueba consisten en 948736, 16354 y
 
 La propuesta busca evaluar la explicabilidad de modelos estado del arte en la tarea de reconocimiento de voz mediante métodos \textbf{post-hoc}.
 
-\subsubsection{Whisper + LIME}
+\subsubsection{SLIME}
 
-Para explicar las transcripciones del modelo Whisper, se fragmentó una grabación de audio en segmentos de 100 milisegundos y se consideró como representación interpretable un vector booleano que indica la presencia o ausencia de cada segmento. Utilizando esta representación, se generó una vecindad de 100 instancias silenciando segmentos de manera aleatoria. Cada instancia de la vecindad fue transcrita por Whisper, y mediante la distancia de Levenshtein entre la transcripción perturbada y la original se cuantificó el impacto de los silencios, proporcionando una base para una comparación cuantitativa entre las transcripciones. Finalmente, se ajustó un modelo explicable de regresión lineal considerando la representación interpretable de los audios como entrada y la distancia de Levenshtein como salida, lo cual permitió evaluar la importancia de los segmentos.
+Para explicar las transcripciones del modelo Whisper, se propone el algoritmo \textbf{SLIME} (Speech LIME) que modela cómo diferentes modificaciones en la señal de audio afectan la calidad de la transcripción.
+
+SLIME fragmenta una grabación de audio en segmentos de 100 milisegundos y considera como representación interpretable un vector booleano que indica la presencia o ausencia de cada segmento. Utilizando esta representación, se genera una vecindad de 100 instancias apagando segmentos de manera aleatoria. Cada instancia de la vecindad fue transcrita por Whisper, y mediante la distancia de Levenshtein entre la transcripción perturbada y la original se cuantificó el impacto de los silencios, proporcionando una base para una comparación cuantitativa entre las transcripciones. Finalmente, se ajustó un modelo explicable de regresión lineal considerando la representación interpretable de los audios como entrada y la distancia de Levenshtein como salida, lo cual permitió evaluar la importancia de los segmentos.
 
 Debido a la alta demanda computacional que implica obtener predicciones de Whisper, se limitó la vecindad exploratoria a 100 combinaciones. Esto estableció un equilibrio entre la profundidad del análisis y las restricciones prácticas.
 
 Los coeficientes resultantes de la regresión lineal ofrecen una interpretación directa de la relevancia de cada segmento de audio. Los segmentos asociados con coeficientes negativos son clave; su presencia es vital para mantener la fidelidad de la transcripción original, mientras que su ausencia es indicativa de un incremento en la distancia de Levenshtein, reflejando transcripciones que se desvían de la original. Esta información es útil para discernir las partes del audio que el modelo considera importantes para una transcripción precisa. El siguiente paso es mejorar la segmentación del audio, buscando métodos que puedan captar con mayor precisión las unidades lingüísticas significativas y mejorar la interpretación de las decisiones del modelo.
 
+En \ref{alg:slime} se resume el algoritmo propuesto para obtener las explicaciones de Whisper mediante LIME.
+
+\begin{algorithm}
+\caption{SLIME}
+\begin{algorithmic}[1]
+\State $S \gets \emptyset$
+\State $f \gets$ Black-box model
+\State $n$ $\gets$ Number of segments of 100 ms in audio
+\State $x \gets$ Original audio instance
+\State $y \gets f(x)$
+\State $x' \gets$ Vector of $n$ ones
+\State $P \gets$ Generate 100 Binomial perturbations of $x'$
+\For{each $p$ in $P$}
+    \State $z \gets$ Apply $p$ to $x$
+    \State $d \gets$  Levenshtein distance between $y$ and $f(z)$
+    \State $z' \gets$ Apply random mask to $x'$
+    \State $S \gets S \cup (z', d)$
+\EndFor
+\State $g \gets$ Fit linear model to $S$
+\State \textbf{end algorithm}
+\end{algorithmic}
+\label{alg:slime}
+\end{algorithm}
+
 
 \section{Resultados preliminares}
 
-\printbibliography
+\subsection{SLIME}
 
+Consideremos una grabación de audio $x$ cuyo contenido es \textit{they perfectly illuminate the flowerbeds of gardens}. Al aplicar SLIME a esta grabación se obtiene la explicación de la Figura \ref{fig:slime}.
+
+\begin{figure}[H]
+\centerline{\includegraphics[width=0.5\textwidth]{./images/slime.png}}
+\caption{Explicación de SLIME}
+\label{fig:slime}
+\end{figure}
+
+Como se mencionó anteriormente, un coeficiente negativo indican que un segmento es importante pues al removerlo la transcripción se desvía de la original considerando la distancia de Levenshtein.
+
+\subsubsection{Borrado de representaciones}
+
+\subsection{Importancia Common Voice 11}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{images/importance_plot.png}
+\caption{Mapa de calor de iImportancias $I(d)$ calculado usando la eEcuación \ref{eq:imp}. Cada celda muestra la importancia de una dimensión (columna) de losl MFCCs en cada métrica (fila) para el modelo entrenado.}
+\end{figure}
+
+\printbibliography
 \end{document}
