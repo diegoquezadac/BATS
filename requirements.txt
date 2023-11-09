@@ -1,6 +1,7 @@
 torch
 torchaudio
 transformers
+transformers[torch]
 soundfile
 deep-phonemizer
 kaldi_io
