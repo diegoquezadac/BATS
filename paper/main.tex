@@ -52,15 +52,15 @@ ASR, XAI, CNN, RNN, Transformers
 
 \section{Introducción}
 
-En el ámbito del reconocimiento de voz, la selección de un modelo y su arquitectura es fundamental para enfrentar los retos específicos que esta disciplina impone. Modelos de vanguardia como Whisper, que se basan en la arquitectura de Transformers de OpenAI, son altamente eficaces pero actúan como cajas negras, lo que significa que los procesos de decisión que siguen para convertir señales de audio en palabras no son transparentes. Esta falta de explicabilidad, esencial para generar confianza en los usuarios, hace imperativo el uso de técnicas de eXplainable Artificial Intelligence (XAI) para desentrañar y comprender cómo estos modelos avanzados toman sus decisiones.
+En el ámbito del reconocimiento de voz, la selección de un modelo y su arquitectura es fundamental para enfrentar los retos específicos que esta disciplina impone. Modelos de vanguardia como Whisper, que se basan en la arquitectura de Transformers de OpenAI, son altamente eficaces, pero actúan como cajas negras, lo que significa que los procesos de decisión que siguen para convertir señales de audio en palabras no son transparentes. Esta falta de explicabilidad, esencial para generar confianza en los usuarios, hace imperativo el uso de técnicas de eXplainable Artificial Intelligence (XAI) para desentrañar y comprender cómo estos modelos avanzados toman sus decisiones.
 
-La explicabilidad en modelos de reconocimiento de voz no solo mejora la comprensión del proceso de toma de decisiones, sino que también es clave para aumentar su robustez, especialmente cuando dichos modelos se integran como componentes centrales en un software. Esta característica se vuelve esencial para ganar la confianza de los usuarios en el producto final. Sin embargo, el desafío se intensifica debido a la naturaleza física y compleja de los datos de entrada, lo que dificulta proporcionar explicaciones claras y de alto nivel basadas en estos datos. Por ello, es crucial mantener un equilibrio entre avanzar en la precisión y eficiencia de los modelos y desarrollar soluciones que mejoren su explicabilidad, asegurando así un balance óptimo entre rendimiento y comprensión del modelo.
+La explicabilidad en modelos de reconocimiento de voz no solo mejora la comprensión del proceso de toma de decisiones, sino que también es clave para aumentar su robustez, especialmente cuando dichos modelos se integran como componentes centrales en un software. Esta característica se vuelve esencial para ganar la confianza de los usuarios en el producto final. Sin embargo, el desafío se intensifica debido a la naturaleza física y compleja de los datos de entrada, lo que dificulta proporcionar explicaciones claras y de alto nivel basados en estos datos. Por ello, es crucial mantener un equilibrio entre avanzar en la precisión y eficiencia de los modelos y desarrollar soluciones que mejoren su explicabilidad, asegurando así un balance óptimo entre rendimiento y comprensión del modelo.
 
 Esta investigación tiene como objetivo mejorar la comprensión de los modelos de reconocimiento de voz para que los usuarios, especialmente aquellos con discapacidades auditivas, puedan confiar en su funcionamiento.
 
 \subsection{Trabajo relacionado}
 
-La investigaciones sobre explicabilidad en modelos de reconocimiento de voz son escasas pero destacan por su aplicación innovadorea de métodos de explicabilidad.
+Las investigaciones sobre explicabilidad en modelos de reconocimiento de voz son escasas, pero destacan por su aplicación innovadora de métodos de explicabilidad.
 
 En \cite{10094635} se aborda la tarea reconocimiento de voz utilizando el conjunto de datos CommonVoice \cite{commonvoice:2020} y tres sistemas de reconocimiento de voz: Google API, Sphinx y DeepSpeech. Los autores plantean las explicaciones como un subconjunto de fotogramas de audio que son causas mínimas y suficientes de la transcripción. Para esto, adaptan las técnicas de clasificación de imagen SFL \cite{sun2020explaining} y explicaciones composicionales \cite{unknown} para luego compararlas con las ofrecidas por LIME \cite{ribeiro2016why}.
 
@@ -84,6 +84,86 @@ Donde $P^\ast$ es la verdadera distribución de probabilidad condicional que rel
 
 La representación utilizada para $\mathbf{X}$ es de vital importancia para el desempeño de un modelo de reconocimiento de voz. La representación más simple es mediante una serie temporal univariada que modela la amplitud de la \textbf{señal de audio} en el tiempo. Al dividir la señal de audio en pequeñas ventanas de tiempo y calculando el espectro de frecuencia para cada ventana se obtiene un \textbf{espectrograma}: una representación visual de la señal de audio en el tiempo y en el dominio de la frecuencia. A partir del espectrograma se pueden extraer características de audio tales como los \textbf{coeficientes cepstrales de Mel} (MFCCs) que son ampliamente utilizados en la literatura para el reconocimiento de voz.
 
+Para poder evaluar un modelo de ASR se utilizan métricas como:
+\begin{itemize}
+    \item \textbf{Word Error Rate (WER):} La métrica Word Error Rate se calcula como el número total de errores, que es la suma de sustituciones, inserciones y eliminaciones de palabras necesarias para cambiar una secuencia de palabras hipotética a una secuencia de referencia, dividido por el número total de palabras en la secuencia de referencia. WER proporciona una medida de cuántas palabras fueron reconocidas incorrectamente en proporción al total de palabras habladas.
+    La fórmula para calcular el Word Error Rate (WER) es:
+    \begin{equation}
+        \text{WER} = \frac{S + D + I}{N}
+    \end{equation}
+    Donde:
+    
+    - \( S \) es el número de sustituciones,
+    
+    - \( D \) es el número de eliminaciones,
+    
+    - \( I \) es el número de inserciones,
+    
+    - \( N \) es el número de palabras en la secuencia de referencia.
+    
+    WER se expresa a menudo como un porcentaje, y cuanto más bajo es el WER, mejor es el rendimiento del sistema de reconocimiento de voz.
+    
+    \item \textbf{ Match Error Rate (MER):} La métrica Match Error Rate es similar a WER, pero en lugar de centrarse solo en las palabras, evalúa la precisión en el emparejamiento de cualquier tipo de elementos, como fonemas, letras o incluso palabras en tareas de reconocimiento. La fórmula para calcular MER es:
+    \begin{equation}
+        \text{MER} = \frac{S + D + I}{S + D + C}
+    \end{equation}
+    Donde:
+    
+    - \( S \) es el número de sustituciones,
+    
+    - \( D \) es el número de eliminaciones,
+    
+    - \( I \) es el número de inserciones,
+    
+    - \( C \) es el número de aciertos correctos.
+    
+    MER también se suele expresar en porcentaje y proporciona una medida de cuántos elementos fueron incorrectamente emparejados en relación con el total de elementos que debían emparejarse, cuanto más bajo es MER mejor es el rendimiento del modelo.
+    
+    \item \textbf{Word Information Lost (WIL):} La métrica Word Information Lost es una medida teórica de la información basada en la entropía desde la perspectiva de la información de las palabras que se pierden en la transcripción de la hipótesis comparada con la referencia. La tasa de WIL se puede calcular con la fórmula:
+    \begin{equation}
+        \text{WIL} = 1 - \frac{C}{N} + \frac{C}{P}
+    \end{equation}
+    
+    donde:
+    
+    - \( C \) es el número de palabras correctas,
+    
+    - \( N \) es el número de palabras en la referencia,
+    
+    - \( P \) es el número de palabras en la predicción.
+    
+    La métrica WIL está diseñada para estar acotada entre 0 y 1, proporcionando una forma normalizada de medir la información perdida en la transcripción. Un valor más bajo de WIL indica un mejor rendimiento del sistema de ASR, siendo 0 el puntaje perfecto. Es importante mencionar que, aunque WIL comparte similitudes con WER en cuanto a su uso para evaluar transcripciones de ASR, está diseñada para abordar ciertas limitaciones de WER al proporcionar una medida normalizada que está efectivamente limitada.
+    
+    \item \textbf{Word Information Preserved (WIP):} La métrica Word Information Preserved mide el porcentaje de palabras correctas predichas entre un conjunto de oraciones verdaderas y un conjunto de oraciones hipotéticas. La fórmula para calcular la tasa de WIP es:
+    \begin{equation}
+        wip = \frac{C}{N} + \frac{C}{P}
+    \end{equation}
+    donde:
+    
+    - \( C \) es el número de palabras correctas,
+    
+    - \( N \) es el número de palabras en la referencia,
+    
+    - \( P \) es el número de palabras en la predicción.
+    
+    Un valor más alto de WIP indica un mejor rendimiento del sistema ASR, siendo 1 la puntuación perfecta.
+    \item \textbf{Character Error Rate (CER):} La métrica Character Error Rate se calcula de manera similar a WER, pero en lugar de considerar las palabras, se enfoca en los caracteres individuales. La fórmula para calcular CER es:
+    \begin{equation}
+        \text{CER} = \frac{S + D + I}{N}
+    \end{equation}
+    Donde:
+    
+    - \( S \) es el número de sustituciones de caracteres,
+    
+    - \( D \) es el número de eliminaciones de caracteres,
+    
+    - \( I \) es el número de inserciones de caracteres,
+    
+    - \( N \) es el número total de caracteres en la secuencia de referencia.
+    
+    Al igual que WER, el CER se expresa en porcentaje, y un valor más bajo indica un mejor rendimiento del sistema de reconocimiento.
+\end{itemize}
+
 LIME \cite{ribeiro2016why} es un modelo agnóstico que explica de manera local las predicciones de un modelo \textbf{caja negra} $f$ mediante la aproximación de $f$ con un modelo \textbf{explicable} $g$ en una vecindad de la instancia de interés $\bm{x}$. LIME utiliza una \textbf{representación interpretable} $\bm{x^\prime} \in \{0,1\}^{d^\prime}$ de la instancia $\bm{x} \in \mathbb{R}^d$. De esta forma, el dominio de la explicación $g$ es $\{0,1\}^{d^\prime}$ y, por lo tanto, $g$ actúa sobre la presencia o ausencia de \textit{componentes interpretables}. Para generar la vecindad se utiliza una función $\pi_x(z)$ que mide la distancia entre dos puntos $x$ y $z$ en el espacio de atributos interpretable. Adicionalmente, dado que la idea es aproximar $f$ mediante un modelo interpretable, se considera una penalización $\Omega$ que mide la complejidad de $g$. Finalmente, y considerando una función de pérdida $\mathcal{L}(f, g, \pi_x)$ que mide la imprecisión del modelo $g$ al aproximar $f$ en la vecindad de $\bm{x}$ de acuerdo a la función de distancia $\pi$, la explicación producida por LIME que asegura \textbf{interpretabilidad} y \textbf{fidelidad local} se obtiene según la siguiente fórmula:
 
 \begin{equation}
@@ -92,25 +172,7 @@ LIME \cite{ribeiro2016why} es un modelo agnóstico que explica de manera local l
 
 Donde $G$ es el conjunto de todos los modelos interpretables considerados, como por ejemplo modelos lineales o árboles de decisión.
 
-El borrado de representaciones \cite{li2017understanding} es un método \textbf{post-hoc} y \textbf{modelo agnóstico}, que consiste en eliminar características del input y ver como varían las predicciones del modelo, para así determinar las características más importantes a la hora de predecir.
-En esta investigación, analizaremos e interpretaremos las decisiones de un modelo de caja negra observando los efectos al borrar varias partes de la representación, en este caso como lo pueden ser las distintas dimensiones de los MFCCs. Sea $f$ un modelo neuronal de ASR, dado un ejemplo $e \in E$ con una transcripción $t$, calcularemos el score de una métrica $M$ con la siguiente fórmula:
-\begin{equation}
-    S_{M}(e,t) = M(t, f(e))
-\end{equation}
-Ahora sea $d$ una dimensión de nuestro vector $e$ la cual queremos explorar, denotaremos $S_{M}(e,t,\neg d)$ el score cuando la dimensión $d$ es removida; esto quiere decir que todos sus valores son 0.
-La importancia de la dimensión $d$ denotada por $I(d)$ estará dada por la diferencia relativa entre $S_{M}(e,t)$ y $S_{M}(e,t,\neg d)$:
-\begin{equation} \label{eq:imp}
-    I(d) = \frac{1}{|E|} \sum_{e \in E} \frac{S_{M}(e,t) - S_{M}(e,t,\neg d)}{S_{M}(e,t)}
-\end{equation}
-Para esto utilizaremos métricas ampliamente utilizadas al evaluar tareas de Automatic Speech Recognition (ASR) como lo son:
-\begin{itemize}
-    \item Word Error Rate (WER)
-    \item Match Error Rate (MER)
-    \item Word Information Lost (WIL)
-    \item Word Information Preserved (WIP)
-    \item Character Error Rate (CER)
-\end{itemize}
-Y calcularemos la importancia de cada dimensión con cada métrica dada la diferencia relativa entre los outputs del modelo.
+El borrado de representaciones \cite{li2017understanding} (Representation Erasure) es un método \textbf{post-hoc} y \textbf{agnóstico al modelo} para entender y explicar las decisiones de un modelo de red neuronal mediante la observación de los efectos que tiene el borrar distintas partes de la representación del modelo. Esto puede incluir dimensiones de vectores de palabras de entrada, unidades ocultas intermedias o palabras de entrada. Se utilizan varias técnicas para analizar los efectos de dicho borrado, como calcular la diferencia relativa en métricas de evaluación o usar aprendizaje por refuerzo para borrar el conjunto mínimo de palabras de entrada con el fin de cambiar la decisión de un modelo neural. Este método ayuda a ofrecer explicaciones claras sobre las decisiones de modelos neuronales y también facilita el análisis de errores en dichos modelos.
 
 \subsection{Conjunto de datos}
 
@@ -156,6 +218,24 @@ En \ref{alg:slime} se resume el algoritmo propuesto para obtener las explicacion
 \label{alg:slime}
 \end{algorithm}
 
+\subsubsection{Borrado de Representaciones}
+Adicionalmente, analizaremos los cambios en la salida del modelo Whisper al borrar ciertas partes de la representación de la señal de audio a través de MFCCs.
+Sea $f$ un modelo neuronal de ASR, dado un ejemplo $x \in E$ con una transcripción $y$, calcularemos el score de una métrica $M$ con la siguiente fórmula:
+\begin{equation}
+    S_{M}(x,y) = M(y, f(x))
+\end{equation}
+Ahora sea $d$ una dimensión de nuestro vector $x$ la cual queremos explorar, denotaremos $S_{M}(x,y,\neg d)$ el score cuando la dimensión $d$ es removida; esto quiere decir que todos sus valores son 0.
+La importancia de la dimensión $d$ denotada por $I(d)$ estará dada por la diferencia relativa entre $S_{M}(x,y)$ y $S_{M}(x,y,\neg d)$:
+\begin{equation} \label{eq:imp}
+    I(d) = \frac{1}{|E|} \sum_{x \in E} \frac{S_{M}(x,y) - S_{M}(x,y,\neg d)}{S_{M}(x,y)}
+\end{equation}
+Para esto utilizaremos las métricas mencionadas en el marco teórico y calcularemos la importancia de cada dimensión con cada métrica dada la diferencia relativa entre los outputs del modelo.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{images/mel_erasure.png}
+\caption{Espectrograma de MEL, al eliminar la dimensión 7 del MFCC, definiendo todos sus valores en 0.}
+\end{figure}
 
 \section{Resultados preliminares}
 
@@ -169,15 +249,28 @@ Consideremos una grabación de audio $x$ cuyo contenido es \textit{they perfectl
 \label{fig:slime}
 \end{figure}
 
-Como se mencionó anteriormente, un coeficiente negativo indican que un segmento es importante pues al removerlo la transcripción se desvía de la original considerando la distancia de Levenshtein.
+Como se mencionó anteriormente, un coeficiente negativo indican que un segmento es importante, pues al removerlo la transcripción se desvía de la original considerando la distancia de Levenshtein.
 
-\subsubsection{Borrado de representaciones}
+\subsection{Borrado de representaciones}
 
-\subsection{Importancia Common Voice 11}
+En la figura \ref{fig:cv_imp} podemos observar el cálculo de importancias para distintas métricas evaluadas en el set de test del dataset Common Voice 11, cada celda muestra la importancia de una dimensión (columna) de los MFCCs en cada métrica (fila) para el modelo entrenado.
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.5\textwidth]{images/importance_plot.png}
-\caption{Mapa de calor de iImportancias $I(d)$ calculado usando la eEcuación \ref{eq:imp}. Cada celda muestra la importancia de una dimensión (columna) de losl MFCCs en cada métrica (fila) para el modelo entrenado.}
+\caption{Mapa de calor de importancias $I(d)$ calculado usando la ecuación \ref{eq:imp}.}
+\label{fig:cv_imp}
+\end{figure}
+
+En este ejemplo se puede visualizar como la dimensión 4 es la más importante para la métrica WER y CER.
+Una importancia mayor implica que al remover esa dimensión las predicciones del modelo empeoran con respecto a la métrica evaluada, por ende es una dimensión importante para el modelo.
+
+También podemos observar que hay importancias negativas, esto quiere decir que al eliminar esa dimensión las predicciones del modelo mejoran, lo que es un hallazgo muy interesante, ya que podríamos optimizar al modelo borrando ciertas dimensiones.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{images/negative_importance.png}
+\caption{Mapa de calor de importancias $I(d)$ negativas.}
+\label{fig:cv_imp_neg}
 \end{figure}
 
 \printbibliography
