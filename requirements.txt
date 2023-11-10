@@ -16,3 +16,5 @@ jiwer
 ipykernel
 nltk
 torcheval
+seaborn
+pandas

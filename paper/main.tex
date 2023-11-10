@@ -52,7 +52,7 @@ ASR, XAI, CNN, RNN, Transformers
 
 \section{Introducción}
 
-En el ámbito del reconocimiento de voz, la selección de un modelo y su arquitectura es fundamental para enfrentar los retos específicos que esta disciplina impone. Modelos de vanguardia como Whisper, que se basan en la arquitectura de Transformers de OpenAI, son altamente eficaces, pero actúan como cajas negras, lo que significa que los procesos de decisión que siguen para convertir señales de audio en palabras no son transparentes. Esta falta de explicabilidad, esencial para generar confianza en los usuarios, hace imperativo el uso de técnicas de eXplainable Artificial Intelligence (XAI) para desentrañar y comprender cómo estos modelos avanzados toman sus decisiones.
+En el ámbito del reconocimiento de voz, la selección de un modelo y su arquitectura es fundamental para enfrentar los retos específicos que esta disciplina impone. Modelos de vanguardia como Whisper de OpenAI, que se basan en la arquitectura de Transformers, son altamente eficaces, pero actúan como cajas negras, lo que significa que los procesos de decisión que siguen para convertir señales de audio en palabras no son transparentes. Esta falta de explicabilidad, esencial para generar confianza en los usuarios, hace imperativo el uso de técnicas de eXplainable Artificial Intelligence (XAI) para desentrañar y comprender cómo estos modelos avanzados toman sus decisiones.
 
 La explicabilidad en modelos de reconocimiento de voz no solo mejora la comprensión del proceso de toma de decisiones, sino que también es clave para aumentar su robustez, especialmente cuando dichos modelos se integran como componentes centrales en un software. Esta característica se vuelve esencial para ganar la confianza de los usuarios en el producto final. Sin embargo, el desafío se intensifica debido a la naturaleza física y compleja de los datos de entrada, lo que dificulta proporcionar explicaciones claras y de alto nivel basados en estos datos. Por ello, es crucial mantener un equilibrio entre avanzar en la precisión y eficiencia de los modelos y desarrollar soluciones que mejoren su explicabilidad, asegurando así un balance óptimo entre rendimiento y comprensión del modelo.
 
@@ -196,7 +196,7 @@ Los coeficientes resultantes de la regresión lineal ofrecen una interpretación
 
 En \ref{alg:slime} se resume el algoritmo propuesto para obtener las explicaciones de Whisper mediante LIME.
 
-\begin{algorithm}
+\begin{algorithm}[H]
 \caption{SLIME}
 \begin{algorithmic}[1]
 \State $S \gets \emptyset$
@@ -234,10 +234,23 @@ Para esto utilizaremos las métricas mencionadas en el marco teórico y calcular
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.5\textwidth]{images/mel_erasure.png}
-\caption{Espectrograma de MEL, al eliminar la dimensión 7 del MFCC, definiendo todos sus valores en 0.}
+\caption{Ejemplo: “Joe Keaton disapproved of films, and Buster also had reservations about the medium.” y su espectrograma de MEL, al eliminar la dimensión 7 del MFCC, definiendo todos sus valores en 0.}
 \end{figure}
 
 \section{Resultados preliminares}
+
+\subsection{Entorno de experimentación}
+El entorno de experimentación utilizado para realizar esta investigación fue el siguiente:
+\begin{itemize}
+    \item CPU: Apple M1 Pro 10 Cores.
+    \item GPU: Apple GPU 16 Cores.
+    \item RAM: 16G B LPDDR5.
+    \item OS: macOS 14.0 Sonoma.
+    \item Software: Python 3.10, PyTorch 2.1.0, Transformers 4.35.0, Librosa 0.10.1, Datasets 2.14.6, NumPy 1.25.0, Pandas 2.1.2, NLTK 3.8.1, Scikit-learn 1.3.2, JIWER 3.0.3.
+\end{itemize}
+
+Para todos los experimentos se definió una semilla para poder generar resultados reproducibles, la semilla utilizada fue 42.
+Como modelo se utilizó Whisper \cite{radford2022robust} de OpenAI y en concreto se utilizó la versión whisper-tiny con 39 Millones de parámetros.
 
 \subsection{SLIME}
 
@@ -264,6 +277,14 @@ En la figura \ref{fig:cv_imp} podemos observar el cálculo de importancias para 
 
 En este ejemplo se puede visualizar como la dimensión 4 es la más importante para la métrica WER y CER.
 Una importancia mayor implica que al remover esa dimensión las predicciones del modelo empeoran con respecto a la métrica evaluada, por ende es una dimensión importante para el modelo.
+
+Al hacer la transformación inversa de los coeficientes de MEL podemos notar como la dimensión 4 equivale a la frecuencia de 153 Hz, esto nos indica que Whisper se basa en las frecuencias más bajas para realizar buenas predicciones.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{images/dim_4_erasured.png}
+\caption{Ejemplo: “The new patch is less invasive than the old one, but still causes regressions.” y su espectrograma del MEL al borrar la dimensión 4.}
+\label{fig:mel_erasure_dim_4}
+\end{figure}
 
 También podemos observar que hay importancias negativas, esto quiere decir que al eliminar esa dimensión las predicciones del modelo mejoran, lo que es un hallazgo muy interesante, ya que podríamos optimizar al modelo borrando ciertas dimensiones.
 \begin{figure}[H]
