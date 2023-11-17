@@ -72,6 +72,7 @@ En \cite{DBLP:journals/corr/abs-2008-00582} se aborda la tarea de etiquetado de 
 
 \subsection{Marco teórico}
 
+\subsubsection{Speech Recognition}
 El reconocimiento de voz, o más conocido en inglés como \textit{speech recognition}, es la tarea de asignar una secuencia de palabras a señales acústicas que contienen lenguaje hablado. 
 Implica reconocer las palabras pronunciadas en una grabación de audio y transcribirlas a un formato escrito. El objetivo es transcribir con precisión el discurso en tiempo real o a partir de audio grabado, teniendo en cuenta factores como el acento, la velocidad del habla y el ruido de fondo.
 Cuando la transcripción se realiza en tiempo real se habla de reconocimiento automático de voz o \textit{Automatic Speech Recognition} (ASR) en inglés. Considerando $\mathbf{X} = (x^{(1)}, x^{(2)} ,\dots, x^{(T)})$ como una secuencia de audio de largo $T$ e $y = (y_1, y_2, \dots, y_N)$ como una secuencia de palabras de largo $N$ podemos definir la tarea de reconocimiento de voz de manera precisa mediante el siguiente problema de optimización:
@@ -84,6 +85,7 @@ Donde $P^\ast$ es la verdadera distribución de probabilidad condicional que rel
 
 La representación utilizada para $\mathbf{X}$ es de vital importancia para el desempeño de un modelo de reconocimiento de voz. La representación más simple es mediante una serie temporal univariada que modela la amplitud de la \textbf{señal de audio} en el tiempo. Al dividir la señal de audio en pequeñas ventanas de tiempo y calculando el espectro de frecuencia para cada ventana se obtiene un \textbf{espectrograma}: una representación visual de la señal de audio en el tiempo y en el dominio de la frecuencia. A partir del espectrograma se pueden extraer características de audio tales como los \textbf{coeficientes cepstrales de Mel} (MFCCs) que son ampliamente utilizados en la literatura para el reconocimiento de voz.
 
+\subsubsection{Métricas de Evaluación}
 Para poder evaluar un modelo de ASR se utilizan métricas como:
 \begin{itemize}
     \item \textbf{Word Error Rate (WER):} La métrica Word Error Rate se calcula como el número total de errores, que es la suma de sustituciones, inserciones y eliminaciones de palabras necesarias para cambiar una secuencia de palabras hipotética a una secuencia de referencia, dividido por el número total de palabras en la secuencia de referencia. WER proporciona una medida de cuántas palabras fueron reconocidas incorrectamente en proporción al total de palabras habladas.
@@ -164,6 +166,61 @@ Para poder evaluar un modelo de ASR se utilizan métricas como:
     Al igual que WER, el CER se expresa en porcentaje, y un valor más bajo indica un mejor rendimiento del sistema de reconocimiento.
 \end{itemize}
 
+\subsubsection{Estado del Arte}
+Hoy en día existen variadas arquitecturas de Deep Learning para la tarea de ASR, cada una con sus ventajas y desventajas, es por esto que se utiliza como referencia el \textbf{Open ASR Leaderboard} de Hugginface, donde se evalúan diversos modelos frente a distintos datasets. Dado que evaluar un sistema de reconocimiento de voz es una tarea difícil, en el Open ASR Leaderboard se utiliza la estrategia de evaluación multi-dataset propuesta en ESB \cite{gandhi2022esb} para obtener evaluaciones robustas de cada modelo.
+ESB es un punto de referencia para evaluar el rendimiento de un único sistema de reconocimiento automático de voz (ASR) en un amplio conjunto de conjuntos de datos de voz. Comprende ocho conjuntos de datos de reconocimiento de voz en inglés, que capturan una amplia gama de dominios, condiciones acústicas, estilos de hablantes y requisitos de transcripción. Como tal, proporciona una mejor indicación de cómo es probable que funcione un modelo en ASR descendente en comparación con evaluarlo en un solo conjunto de datos.
+La puntuación ESB se calcula como un macropromedio de las puntuaciones WER en todos los conjuntos de datos de ESB. Los modelos en la tabla de clasificación se clasifican según sus puntuaciones WER promedio, de menor a mayor, y los dataset utilizados son:
+\begin{itemize}
+    \item \textbf{LibriSpeech:} LibriSpeech \cite{7178964} es un corpus de aproximadamente 1000 horas de voz en inglés leída a 16 kHz. Los datos se derivan de audiolibros leídos del proyecto LibriVox y han sido cuidadosamente segmentados y alineados.
+    \item \textbf{Common Voice 9:} Common Voice \cite{ardila2020common} consta de 14973 horas validadas en 93 idiomas junto con sus transcripciones, en el conjunto de datos también incluyen metadatos demográficos como edad, sexo y acento que pueden ayudar a mejorar la precisión de los motores de reconocimiento de voz.
+    \item \textbf{VoxPopuli:} VoxPopuli \cite{wang2021voxpopuli} es un corpus de habla multilingüe. Los datos se recopilan de grabaciones de eventos del Parlamento Europeo de 2009-2020. Esta implementación contiene datos de voz transcritos para 18 idiomas. También contiene 29 horas de datos de voz transcritos en inglés no nativo destinado a la investigación en ASR para habla con acento.
+    \item \textbf{TED-LIUM:} TED-LIUM \cite{rousseau-etal-2012-ted} son charlas TED en inglés, con transcripciones, muestreadas a 16 kHz. Las tres versiones del corpus oscilan entre 118 y 452 horas de datos de voz transcritos.
+    \item \textbf{GigaSpeech:} GigaSpeech \cite{chen2021gigaspeech} es un corpus de reconocimiento de voz en inglés multidominio y en evolución con 10.000 horas de audio etiquetado de alta calidad. Los datos de audio transcritos se recopilan de audiolibros, podcasts y YouTube, y cubren estilos de lectura y de habla espontánea, y una variedad de temas, como artes, ciencias, deportes, etc.
+    \item \textbf{SPGISpeech:} SPGISpeech \cite{oneill2021spgispeech} es un corpus de 5000 horas de audio financiero transcrito profesionalmente. SPGISpeech contiene una amplia muestra representativa de acentos en inglés, calidad de audio que varía mucho y habla tanto espontánea como narrada. Cada una de las transcripciones ha sido verificada por varios editores profesionales para garantizar una alta precisión y están completamente formateadas, incluidas las mayúsculas, la puntuación y la desnormalización de palabras no estándar. SPGISpeech consta de 5000 horas de llamadas grabadas sobre resultados de empresas y sus respectivas transcripciones. SPGISpeech contiene aproximadamente 50.000 hablantes. El formato de cada archivo WAV es audio de un solo canal, 16 kHz y 16 bits.
+    \item \textbf{Earnings-22:} Earnings 22 \cite{delrio2022earnings22} es un corpus de 119 horas de llamadas de ganancias en inglés recopiladas de empresas globales. El objetivo principal es servir como punto de referencia para los modelos de ASR industriales y académicos en el habla con acento del mundo real.
+    \item \textbf{AMI:} AMI Meeting \cite{Platen_2019} es un corpus que consta de 100 horas de grabaciones de reuniones. Las grabaciones utilizan una variedad de señales sincronizadas con una línea de tiempo común. Estos incluyen micrófonos para hablar de cerca y de campo lejano, cámaras de video individuales y de vista de sala, y salida de un proyector de diapositivas y una pizarra electrónica. Durante las reuniones, los participantes también tienen a su disposición bolígrafos no sincronizados que registran lo escrito. Las reuniones se grabaron en inglés utilizando tres salas diferentes con diferentes propiedades acústicas e incluyeron en su mayoría hablantes no nativos.
+\end{itemize}
+
+También en ESB incluyen una métrica de latencia, \textbf{Real Time Factor} (RTF). El factor de tiempo real es una medida de la latencia de los sistemas automáticos de reconocimiento de voz, es decir, cuánto tiempo tarda un modelo en procesar una determinada cantidad de voz. Generalmente, se expresa como un múltiplo del tiempo real. Un RTF de 1 significa que procesa la voz tan rápido como se pronuncia, mientras que un RTF de 2 significa que tarda el doble. Por tanto, un valor RTF más bajo indica una latencia más baja.
+
+El modelo escogido para esta investigación fue \textbf{Whisper} de OpenAI, un modelo Open-Source que se encuentra en el top del leaderboard Open ASR.
+
+\subsubsection{Whisper}
+Whisper \cite{radford2022robust}  es un modelo de reconocimiento de voz de propósito general. Está entrenado en un gran conjunto de datos de audio diverso y también es un modelo multitarea que puede realizar reconocimiento de voz multilingüe, traducción de voz e identificación de idioma.
+
+La arquitectura Whisper es un enfoque simple de extremo a extremo, implementado como un Transformer encoder-decoder. El audio de entrada se divide en fragmentos de 30 segundos, se convierte en un espectrograma log-Mel y luego se pasa a un encoder. Se entrena un decoder para predecir el título de texto correspondiente, entremezclado con tokens especiales que dirigen al modelo único a realizar tareas como identificación de idioma, marcas de tiempo a nivel de frase, transcripción de voz multilingüe y traducción de voz al inglés.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{images/whisper_1.png}
+\caption{Arquitectura Whisper, Fuente: OpenAI.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{images/whisper_2.png}
+\caption{Tokens MultiTask Training Format, Fuente: OpenAI.}
+\end{figure}
+
+Los modelos Whisper están entrenados para tareas de reconocimiento y traducción de voz, siendo capaces de transcribir audio de voz al texto en el idioma en que se habla (ASR), así como traducirlo al inglés (traducción de voz). Los investigadores de OpenAI desarrollaron modelos para estudiar la solidez de los sistemas de procesamiento del habla entrenados bajo una supervisión débil a gran escala. Existen 7 modelos de diferentes tamaños y capacidades, resumidos en la siguiente tabla.
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Tamaño} & \textbf{Parámetros} & \textbf{Solo Inglés} & \textbf{Multilingüe}  \\ \hline
+Tiny            & 39 M                & \checkmark           & \checkmark            \\ \hline
+Base            & 74 M                & \checkmark           & \checkmark            \\ \hline
+Small           & 244 M               & \checkmark           & \checkmark            \\ \hline
+Medium          & 769 M               & \checkmark           & \checkmark            \\ \hline
+Large           & 1550 M              & x                    & \checkmark            \\ \hline
+Large-V2        & 1550 M              & x                    & \checkmark            \\ \hline
+Large-V3        & 1550 M              & x                    & \checkmark            \\ \hline   
+\end{tabular}
+\end{table}
+
+Los modelos se entrenan con 680.000 horas de audio y las transcripciones correspondientes recopiladas de Internet. El 65\% de estos datos (o 438.000 horas) representa audio en inglés y sus transcripciones, aproximadamente el 18\% (o 126.000 horas) representa audio en otros idiomas y transcripciones en inglés, mientras que el 17\% final (o 117.000 horas) representa audio en inglés y las transcripciones en el idioma correspondiente. Estos datos no ingleses representan 98 idiomas diferentes.
+
+\subsubsection{LIME}
 LIME \cite{ribeiro2016why} es un modelo agnóstico que explica de manera local las predicciones de un modelo \textbf{caja negra} $f$ mediante la aproximación de $f$ con un modelo \textbf{explicable} $g$ en una vecindad de la instancia de interés $\bm{x}$. LIME utiliza una \textbf{representación interpretable} $\bm{x^\prime} \in \{0,1\}^{d^\prime}$ de la instancia $\bm{x} \in \mathbb{R}^d$. De esta forma, el dominio de la explicación $g$ es $\{0,1\}^{d^\prime}$ y, por lo tanto, $g$ actúa sobre la presencia o ausencia de \textit{componentes interpretables}. Para generar la vecindad se utiliza una función $\pi_x(z)$ que mide la distancia entre dos puntos $x$ y $z$ en el espacio de atributos interpretable. Adicionalmente, dado que la idea es aproximar $f$ mediante un modelo interpretable, se considera una penalización $\Omega$ que mide la complejidad de $g$. Finalmente, y considerando una función de pérdida $\mathcal{L}(f, g, \pi_x)$ que mide la imprecisión del modelo $g$ al aproximar $f$ en la vecindad de $\bm{x}$ de acuerdo a la función de distancia $\pi$, la explicación producida por LIME que asegura \textbf{interpretabilidad} y \textbf{fidelidad local} se obtiene según la siguiente fórmula:
 
 \begin{equation}
@@ -172,6 +229,7 @@ LIME \cite{ribeiro2016why} es un modelo agnóstico que explica de manera local l
 
 Donde $G$ es el conjunto de todos los modelos interpretables considerados, como por ejemplo modelos lineales o árboles de decisión.
 
+\subsubsection{Representation Erasure}
 El borrado de representaciones \cite{li2017understanding} (Representation Erasure) es un método \textbf{post-hoc} y \textbf{agnóstico al modelo} para entender y explicar las decisiones de un modelo de red neuronal mediante la observación de los efectos que tiene el borrar distintas partes de la representación del modelo. Esto puede incluir dimensiones de vectores de palabras de entrada, unidades ocultas intermedias o palabras de entrada. Se utilizan varias técnicas para analizar los efectos de dicho borrado, como calcular la diferencia relativa en métricas de evaluación o usar aprendizaje por refuerzo para borrar el conjunto mínimo de palabras de entrada con el fin de cambiar la decisión de un modelo neural. Este método ayuda a ofrecer explicaciones claras sobre las decisiones de modelos neuronales y también facilita el análisis de errores en dichos modelos.
 
 \subsection{Conjunto de datos}
@@ -250,7 +308,7 @@ El entorno de experimentación utilizado para realizar esta investigación fue e
 \end{itemize}
 
 Para todos los experimentos se definió una semilla para poder generar resultados reproducibles, la semilla utilizada fue 42.
-Como modelo se utilizó Whisper \cite{radford2022robust} de OpenAI y en concreto se utilizó la versión whisper-tiny con 39 Millones de parámetros.
+Como modelo se utilizó whisper-tiny con 39 Millones de parámetros.
 
 \subsection{SLIME}
 
