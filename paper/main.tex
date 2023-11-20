@@ -21,6 +21,14 @@
 \usepackage{hyperref}
 \usepackage[backend=biber,style=ieee]{biblatex}
 \addbibresource{references.bib}
+\usepackage{comment}
+\usepackage{caption}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    }
 
 \begin{document}
 
@@ -47,7 +55,7 @@ El reconocimiento de voz se basa en representaciones de señales acústicas, com
 \end{abstract}
 
 \begin{IEEEkeywords}
-ASR, XAI, CNN, RNN, Transformers
+ASR, XAI, LIME, Representation Erasure
 \end{IEEEkeywords}
 
 \section{Introducción}
@@ -60,7 +68,9 @@ A pesar de la importancia de la explicabilidad en el reconocimiento de voz, libr
 
 Esta investigación tiene como objetivo mejorar la comprensión de los modelos de reconocimiento de voz para que los usuarios, especialmente aquellos con discapacidades auditivas, puedan confiar en su funcionamiento.
 
-\subsection{Trabajo relacionado}
+En este estudio, la sección \ref{2-Related-Work} aborda el trabajo previo relacionado con el tema, seguido por una exposición del marco teórico en la sección \ref{3-Theoretical-Framework}. La sección \ref{4-Dataset} detalla el conjunto de datos empleados para la investigación. La metodología adoptada se describe en la sección \ref{5-Methodology}, mientras que los resultados alcanzados se exponen en la sección \ref{6-Results}. Las perspectivas de investigaciones futuras se discuten en la sección \ref{7-Future-Work}. Finalmente, la sección \ref{8-Conclusions} sintetiza las conclusiones derivadas del estudio. Además, la sección \ref{9-Anexos} contiene anexos que ofrecen información adicional y detallada sobre los resultados obtenidos.
+
+\section{Trabajo relacionado} \label{2-Related-Work}
 
 Las investigaciones sobre explicabilidad en modelos de reconocimiento de voz son escasas, pero destacan por su aplicación innovadora de métodos de explicabilidad.
 
@@ -70,11 +80,9 @@ En \cite{wu2023trust} se aborda la tarea de \textbf{reconocimiento de fonemas} u
 
 En \cite{DBLP:journals/corr/abs-2008-00582} se aborda la tarea de etiquetado de música. Los autores plantean la necesidad de dar \textbf{explicaciones audibles} y proponen audioLIME como una extensión de LIME que utiliza explicaciones basadas en separación de fuentes.
 
-\section{Método propuesto}
+\section{Marco Teorico} \label{3-Theoretical-Framework}
 
-\subsection{Marco teórico}
-
-\subsubsection{Speech Recognition}
+\subsection{Speech Recognition}
 El reconocimiento de voz, o más conocido en inglés como \textit{speech recognition}, es la tarea de asignar una secuencia de palabras a señales acústicas que contienen lenguaje hablado. 
 Implica reconocer las palabras pronunciadas en una grabación de audio y transcribirlas a un formato escrito. El objetivo es transcribir con precisión el discurso en tiempo real o a partir de audio grabado, teniendo en cuenta factores como el acento, la velocidad del habla y el ruido de fondo.
 Cuando la transcripción se realiza en tiempo real se habla de reconocimiento automático de voz o \textit{Automatic Speech Recognition} (ASR) en inglés. Considerando $\mathbf{X} = (x^{(1)}, x^{(2)} ,\dots, x^{(T)})$ como una secuencia de audio de largo $T$ e $y = (y_1, y_2, \dots, y_N)$ como una secuencia de palabras de largo $N$ podemos definir la tarea de reconocimiento de voz de manera precisa mediante el siguiente problema de optimización:
@@ -87,7 +95,7 @@ Donde $P^\ast$ es la verdadera distribución de probabilidad condicional que rel
 
 La representación utilizada para $\mathbf{X}$ es de vital importancia para el desempeño de un modelo de reconocimiento de voz. La representación más simple es mediante una serie temporal univariada que modela la amplitud de la \textbf{señal de audio} en el tiempo. Al dividir la señal de audio en pequeñas ventanas de tiempo y calculando el espectro de frecuencia para cada ventana se obtiene un \textbf{espectrograma}: una representación visual de la señal de audio en el tiempo y en el dominio de la frecuencia. A partir del espectrograma se pueden extraer características de audio tales como los \textbf{coeficientes cepstrales de Mel} (MFCCs) que son ampliamente utilizados en la literatura para el reconocimiento de voz.
 
-\subsubsection{Métricas de Evaluación}
+\subsection{Métricas de Evaluación}
 Para poder evaluar un modelo de ASR se utilizan métricas como:
 \begin{itemize}
     \item \textbf{Word Error Rate (WER):} La métrica Word Error Rate se calcula como el número total de errores, que es la suma de sustituciones, inserciones y eliminaciones de palabras necesarias para cambiar una secuencia de palabras hipotética a una secuencia de referencia, dividido por el número total de palabras en la secuencia de referencia. WER proporciona una medida de cuántas palabras fueron reconocidas incorrectamente en proporción al total de palabras habladas.
@@ -168,8 +176,8 @@ Para poder evaluar un modelo de ASR se utilizan métricas como:
     Al igual que WER, el CER se expresa en porcentaje, y un valor más bajo indica un mejor rendimiento del sistema de reconocimiento.
 \end{itemize}
 
-\subsubsection{Estado del Arte}
-Hoy en día existen variadas arquitecturas de Deep Learning para la tarea de ASR, cada una con sus ventajas y desventajas, es por esto que se utiliza como referencia el \textbf{Open ASR Leaderboard} de Hugginface, donde se evalúan diversos modelos frente a distintos datasets. Dado que evaluar un sistema de reconocimiento de voz es una tarea difícil, en el Open ASR Leaderboard se utiliza la estrategia de evaluación multi-dataset propuesta en ESB \cite{gandhi2022esb} para obtener evaluaciones robustas de cada modelo.
+\subsection{Estado del Arte}
+Hoy en día existen variadas arquitecturas de Deep Learning para la tarea de ASR, cada una con sus ventajas y desventajas, es por esto que se utiliza como referencia el \href{https://huggingface.co/spaces/hf-audio/open_asr_leaderboard}{Open ASR Leaderboard} de Hugginface, donde se evalúan diversos modelos frente a distintos datasets. Dado que evaluar un sistema de reconocimiento de voz es una tarea difícil, en el Open ASR Leaderboard se utiliza la estrategia de evaluación multi-dataset propuesta en ESB \cite{gandhi2022esb} para obtener evaluaciones robustas de cada modelo.
 ESB es un punto de referencia para evaluar el rendimiento de un único sistema de reconocimiento automático de voz (ASR) en un amplio conjunto de conjuntos de datos de voz. Comprende ocho conjuntos de datos de reconocimiento de voz en inglés, que capturan una amplia gama de dominios, condiciones acústicas, estilos de hablantes y requisitos de transcripción. Como tal, proporciona una mejor indicación de cómo es probable que funcione un modelo en ASR descendente en comparación con evaluarlo en un solo conjunto de datos.
 La puntuación ESB se calcula como un macropromedio de las puntuaciones WER en todos los conjuntos de datos de ESB. Los modelos en la tabla de clasificación se clasifican según sus puntuaciones WER promedio, de menor a mayor, y los dataset utilizados son:
 \begin{itemize}
@@ -187,26 +195,27 @@ También en ESB incluyen una métrica de latencia, \textbf{Real Time Factor} (RT
 
 El modelo escogido para esta investigación fue \textbf{Whisper} de OpenAI, un modelo Open-Source que se encuentra en el top del leaderboard Open ASR.
 
-\subsubsection{Whisper}
+\subsection{Whisper}
 Whisper \cite{radford2022robust}  es un modelo de reconocimiento de voz de propósito general. Está entrenado en un gran conjunto de datos de audio diverso y también es un modelo multitarea que puede realizar reconocimiento de voz multilingüe, traducción de voz e identificación de idioma.
 
 La arquitectura Whisper es un enfoque simple de extremo a extremo, implementado como un Transformer encoder-decoder. El audio de entrada se divide en fragmentos de 30 segundos, se convierte en un espectrograma log-Mel y luego se pasa a un encoder. Se entrena un decoder para predecir el título de texto correspondiente, entremezclado con tokens especiales que dirigen al modelo único a realizar tareas como identificación de idioma, marcas de tiempo a nivel de frase, transcripción de voz multilingüe y traducción de voz al inglés.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.5\textwidth]{images/whisper_1.png}
-\caption{Arquitectura Whisper, Fuente: OpenAI.}
+\caption{Arquitectura Whisper Fuente: OpenAI.} 
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure*}[ht]
 \centering
-\includegraphics[width=0.5\textwidth]{images/whisper_2.png}
+\includegraphics[width=1\textwidth]{images/whisper_2.png}
 \caption{Tokens MultiTask Training Format, Fuente: OpenAI.}
-\end{figure}
+\end{figure*}
 
-Los modelos Whisper están entrenados para tareas de reconocimiento y traducción de voz, siendo capaces de transcribir audio de voz al texto en el idioma en que se habla (ASR), así como traducirlo al inglés (traducción de voz). Los investigadores de OpenAI desarrollaron modelos para estudiar la solidez de los sistemas de procesamiento del habla entrenados bajo una supervisión débil a gran escala. Existen 7 modelos de diferentes tamaños y capacidades, resumidos en la siguiente tabla.
-\begin{table}[h]
-\centering
+Los modelos Whisper están entrenados para tareas de reconocimiento y traducción de voz, siendo capaces de transcribir audio de voz al texto en el idioma en que se habla (ASR), así como traducirlo al inglés (traducción de voz). Los investigadores de OpenAI desarrollaron modelos para estudiar la solidez de los sistemas de procesamiento del habla entrenados bajo una supervisión débil a gran escala. Existen 7 modelos de diferentes tamaños y capacidades, resumidos en la tabla \ref{tab:whisper-table}.
+
+\begin{table}[H]
+\begin{center}
 \begin{tabular}{|c|c|c|c|}
 \hline
 \textbf{Tamaño} & \textbf{Parámetros} & \textbf{Solo Inglés} & \textbf{Multilingüe}  \\ \hline
@@ -218,12 +227,14 @@ Large           & 1550 M              & x                    & \checkmark       
 Large-V2        & 1550 M              & x                    & \checkmark            \\ \hline
 Large-V3        & 1550 M              & x                    & \checkmark            \\ \hline   
 \end{tabular}
+\caption{\label{tab:whisper-table} Modelos Whisper}
+\end{center}
 \end{table}
 
 Los modelos se entrenan con 680.000 horas de audio y las transcripciones correspondientes recopiladas de Internet. El 65\% de estos datos (o 438.000 horas) representa audio en inglés y sus transcripciones, aproximadamente el 18\% (o 126.000 horas) representa audio en otros idiomas y transcripciones en inglés, mientras que el 17\% final (o 117.000 horas) representa audio en inglés y las transcripciones en el idioma correspondiente. Estos datos no ingleses representan 98 idiomas diferentes.
 
-\subsubsection{LIME}
-LIME \cite{ribeiro2016why} es un modelo agnóstico que explica de manera local las predicciones de un modelo \textbf{caja negra} $f$ mediante la aproximación de $f$ con un modelo \textbf{explicable} $g$ en una vecindad de la instancia de interés $\bm{x}$. LIME utiliza una \textbf{representación interpretable} $\bm{x^\prime} \in \{0,1\}^{d^\prime}$ de la instancia $\bm{x} \in \mathbb{R}^d$. De esta forma, el dominio de la explicación $g$ es $\{0,1\}^{d^\prime}$ y, por lo tanto, $g$ actúa sobre la presencia o ausencia de \textit{componentes interpretables}. Para generar la vecindad se utiliza una función $\pi_x(z)$ que mide la distancia entre dos puntos $x$ y $z$ en el espacio de atributos interpretable. Adicionalmente, dado que la idea es aproximar $f$ mediante un modelo interpretable, se considera una penalización $\Omega$ que mide la complejidad de $g$. Finalmente, y considerando una función de pérdida $\mathcal{L}(f, g, \pi_x)$ que mide la imprecisión del modelo $g$ al aproximar $f$ en la vecindad de $\bm{x}$ de acuerdo a la función de distancia $\pi$, la explicación producida por LIME que asegura \textbf{interpretabilidad} y \textbf{fidelidad local} se obtiene según la siguiente fórmula:
+\subsection{LIME}
+LIME \cite{ribeiro2016why} es un modelo agnóstico que explica de manera local las predicciones de un modelo \textbf{caja negra} $f$ mediante la aproximación de $f$ con un modelo \textbf{explicable} $g$ en una vecindad de la instancia de interés $\bm{x}$. LIME utiliza una \textbf{representación interpretable} $\bm{x^\prime} \in \{0,1\}^{d^\prime}$ de la instancia $\bm{x} \in \mathbb{R}^d$. De esta forma, el dominio de la explicación $g$ es $\{0,1\}^{d^\prime}$ y, por lo tanto, $g$ actúa sobre la presencia o ausencia de \textit{componentes interpretables}. Para generar la vecindad se utiliza una función $\pi_x(z)$ que mide la distancia entre dos puntos $x$ y $z$ en el espacio de atributos interpretable. Adicionalmente, dado que la idea es aproximar $f$ mediante un modelo interpretable, se considera una penalización $\Omega$ que mide la complejidad de $g$. Finalmente, y considerando una función de pérdida $\mathcal{L}(f, g, \pi_x)$ que mide la imprecisión del modelo $g$ al aproximar $f$ en la vecindad de $\bm{x}$ de acuerdo a la función de distancia $\pi$, la explicación producida por LIME que asegura \textbf{interpretabilidad} y \textbf{fidelidad local} se obtiene según el siguiente problema de minimización:
 
 \begin{equation}
     \xi(\bm{x}) = \argmin_{g \in G} \mathcal{L}(f, g, \pi_x) + \Omega(g).
@@ -231,52 +242,18 @@ LIME \cite{ribeiro2016why} es un modelo agnóstico que explica de manera local l
 
 Donde $G$ es el conjunto de todos los modelos interpretables considerados, como por ejemplo modelos lineales o árboles de decisión.
 
-\subsubsection{Representation Erasure}
+\subsection{Representation Erasure}
 El borrado de representaciones \cite{li2017understanding} (Representation Erasure) es un método \textbf{post-hoc} y \textbf{agnóstico al modelo} para entender y explicar las decisiones de un modelo de red neuronal mediante la observación de los efectos que tiene el borrar distintas partes de la representación del modelo. Esto puede incluir dimensiones de vectores de palabras de entrada, unidades ocultas intermedias o palabras de entrada. Se utilizan varias técnicas para analizar los efectos de dicho borrado, como calcular la diferencia relativa en métricas de evaluación o usar aprendizaje por refuerzo para borrar el conjunto mínimo de palabras de entrada con el fin de cambiar la decisión de un modelo neural. Este método ayuda a ofrecer explicaciones claras sobre las decisiones de modelos neuronales y también facilita el análisis de errores en dichos modelos.
 
-\subsection{Conjunto de datos}
+\section{Conjunto de datos} \label{4-Dataset}
 
-En la presente investigación se utilizará el conjunto de datos \href{https://commonvoice.mozilla.org/en/datasets}{\textit{CommonVoice}} \cite{commonvoice:2020}. En particular, se utilizarán las grabaciones en inglés asociadas a la versión 11 de CommonVoice disponible en HuggingFace Datasets.
+En la presente investigación se utilizará el conjunto de datos \textit{CommonVoice} \cite{commonvoice:2020}. En particular, se utilizarán las grabaciones en inglés asociadas a la versión 11 de CommonVoice disponible en HuggingFace Datasets.
 
-Los conjunto de entrenamiento, validación y prueba consisten en 948736, 16354 y 16354 grabaciones de audio respectivamente. Cada grabación de audio tiene asociada una transcripción. Adicionalmente, cada grabación de audio fue grabada con un \textit{sampling rate} de 48 kHz.
+Los conjunto de entrenamiento, validación y prueba consisten en 948736, 16354 y 16354 grabaciones de audio, que corresponden al 96\%, 2\% y un 2\% de los datos respectivamente. Cada grabación de audio tiene asociada una transcripción. Adicionalmente, cada grabación de audio fue grabada con un \textit{sampling rate} de 48 kHz.
 
-\subsection{Descripción propuesta}
+\section{Metodología} \label{5-Methodology}
 
-La propuesta busca evaluar la explicabilidad de modelos estado del arte en la tarea de reconocimiento de voz mediante métodos \textbf{post-hoc}.
-
-\subsubsection{SLIME}
-
-Para explicar las transcripciones del modelo Whisper, se propone el algoritmo \textbf{SLIME} (Speech LIME) que modela cómo diferentes modificaciones en la señal de audio afectan la calidad de la transcripción.
-
-SLIME fragmenta una grabación de audio en segmentos de 100 milisegundos y considera como representación interpretable un vector booleano que indica la presencia o ausencia de cada segmento. Utilizando esta representación, se genera una vecindad de 100 instancias apagando segmentos de manera aleatoria. Cada instancia de la vecindad fue transcrita por Whisper, y mediante la distancia de Levenshtein entre la transcripción perturbada y la original se cuantificó el impacto de los silencios, proporcionando una base para una comparación cuantitativa entre las transcripciones. Finalmente, se ajustó un modelo explicable de regresión lineal considerando la representación interpretable de los audios como entrada y la distancia de Levenshtein como salida, lo cual permitió evaluar la importancia de los segmentos.
-
-Debido a la alta demanda computacional que implica obtener predicciones de Whisper, se limitó la vecindad exploratoria a 100 combinaciones. Esto estableció un equilibrio entre la profundidad del análisis y las restricciones prácticas.
-
-Los coeficientes resultantes de la regresión lineal ofrecen una interpretación directa de la relevancia de cada segmento de audio. Los segmentos asociados con coeficientes negativos son clave; su presencia es vital para mantener la fidelidad de la transcripción original, mientras que su ausencia es indicativa de un incremento en la distancia de Levenshtein, reflejando transcripciones que se desvían de la original. Esta información es útil para discernir las partes del audio que el modelo considera importantes para una transcripción precisa. El siguiente paso es mejorar la segmentación del audio, buscando métodos que puedan captar con mayor precisión las unidades lingüísticas significativas y mejorar la interpretación de las decisiones del modelo.
-
-En \ref{alg:slime} se resume el algoritmo propuesto para obtener las explicaciones de Whisper mediante LIME.
-
-\begin{algorithm}[H]
-\caption{SLIME}
-\begin{algorithmic}[1]
-\State $S \gets \emptyset$
-\State $f \gets$ Black-box model
-\State $n$ $\gets$ Number of segments of 100 ms in audio
-\State $x \gets$ Original audio instance
-\State $y \gets f(x)$
-\State $x' \gets$ Vector of $n$ ones
-\State $P \gets$ Generate 100 Binomial perturbations of $x'$
-\For{each $p$ in $P$}
-    \State $z \gets$ Apply $p$ to $x$
-    \State $d \gets$  Levenshtein distance between $y$ and $f(z)$
-    \State $z' \gets$ Apply random mask to $x'$
-    \State $S \gets S \cup (z', d)$
-\EndFor
-\State $g \gets$ Fit linear model to $S$
-\State \textbf{end algorithm}
-\end{algorithmic}
-\label{alg:slime}
-\end{algorithm}
+La propuesta busca evaluar la explicabilidad de modelos del estado del arte en la tarea de reconocimiento de voz mediante métodos \textbf{post-hoc}.
 
 \subsubsection{Borrado de Representaciones}
 Adicionalmente, analizaremos los cambios en la salida del modelo Whisper al borrar ciertas partes de la representación de la señal de audio a través de MFCCs.
@@ -291,13 +268,51 @@ La importancia de la dimensión $d$ denotada por $I(d)$ estará dada por la dife
 \end{equation}
 Para esto utilizaremos las métricas mencionadas en el marco teórico y calcularemos la importancia de cada dimensión con cada métrica dada la diferencia relativa entre los outputs del modelo.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.5\textwidth]{images/mel_erasure.png}
-\caption{Ejemplo: “Joe Keaton disapproved of films, and Buster also had reservations about the medium.” y su espectrograma de MEL, al eliminar la dimensión 7 del MFCC, definiendo todos sus valores en 0.}
+\subsubsection{SLIME}
+
+Para explicar las transcripciones de Whisper, y tomando inspiración en LIME-TS \cite{wu2023trust}, se propone el método de explicablilidad \textbf{SLIME}.
+
+SLIME fragmenta una grabación de audio en segmentos y considera como representación interpretable un vector booleano que indica la presencia o ausencia de cada segmento. Utilizando esta representación, se genera una vecindad apagando segmentos de manera aleatoria. Cada instancia de la vecindad es transcrita por Whisper, y mediante la distancia de Levenshtein entre la transcripción perturbada y la original se cuantifica el impacto de los silencios, proporcionando una base para una comparación cuantitativa entre las transcripciones. Finalmente, se ajusta un modelo explicable considerando la representación interpretable de los audios como entrada y la distancia de Levenshtein como salida.
+
+Debido a la alta demanda computacional que implica obtener predicciones de Whisper, se limitó la vecindad exploratoria a 100 combinaciones. Esto estableció un equilibrio entre la profundidad del análisis y las restricciones prácticas.
+
+Los coeficientes resultantes de la regresión lineal ofrecen una interpretación directa de la relevancia de cada segmento de audio. Los segmentos asociados con coeficientes negativos son clave; su presencia es vital para mantener la fidelidad de la transcripción original, mientras que su ausencia es indicativa de un incremento en la distancia de Levenshtein, reflejando transcripciones que se desvían de la original. Esta información es útil para discernir las partes del audio que el modelo considera importantes para una transcripción precisa. El siguiente paso es mejorar la segmentación del audio, buscando métodos que puedan captar con mayor precisión las unidades lingüísticas significativas y mejorar la interpretación de las decisiones del modelo.
+
+En el algoritmo \ref{alg:slime} se resume el algoritmo propuesto para obtener las explicaciones de Whisper mediante LIME.
+
+\begin{algorithm}[H]
+\caption{SLIME}
+\begin{algorithmic}[1]
+\State $S \gets \emptyset$
+\State $f \gets$ Black-box model
+\State $g \gets $ Whitle-box model
+\State $n$ $\gets$ Number of segments of 100 ms in audio
+\State $x \gets$ Original audio instance
+\State $y \gets f(x)$
+\State $x' \gets$ Vector of $n$ ones
+\State $P \gets$ Generate 100 Binomial perturbations of $x'$
+\For{each $p$ in $P$}
+    \State $z \gets$ Apply $p$ to $x$
+    \State $d \gets$  Levenshtein distance between $y$ and $f(z)$
+    \State $z' \gets$ Apply random mask to $x'$
+    \State $S \gets S \cup (z', d)$
+\EndFor
+\State $g \gets$ Fit $g$ to $S$
+\State \textbf{end algorithm}
+\end{algorithmic}
+\label{alg:slime}
+\end{algorithm}
+
+Adicionalmente, en la figura \ref{fig:diagram} se presenta un diagrama simplificado del algoritmo:
+
+\begin{figure}[ht]
+\centerline{\includegraphics[width=0.5\textwidth]{./images/diagram.png}}
+\caption{SLIME: Funcionamiento}
+\label{fig:diagram}
 \end{figure}
 
-\section{Resultados preliminares}
+
+\section{Resultados} \label{6-Results}
 
 \subsection{Entorno de experimentación}
 El entorno de experimentación utilizado para realizar esta investigación fue el siguiente:
@@ -314,39 +329,46 @@ Como modelo se utilizó whisper-tiny con 39 Millones de parámetros.
 
 \subsection{SLIME}
 
-Consideremos una grabación de audio $x$ cuyo contenido es \textit{they perfectly illuminate the flowerbeds of gardens}. Al aplicar SLIME a esta grabación se obtiene la explicación de la Figura \ref{fig:slime}.
+Consideremos una grabación de audio $x$ cuyo contenido es \textit{it is a busy market town that serves a large surrounding area}. Al aplicar SLIME considerando a esta grabación se obtiene la explicación de la figura \ref{fig:coefficients}.
 
-\begin{figure}[H]
-\centerline{\includegraphics[width=0.5\textwidth]{./images/slime.png}}
-\caption{Explicación de SLIME}
-\label{fig:slime}
+\begin{figure}[ht]
+\centerline{\includegraphics[width=0.5\textwidth]{./images/coefficients.png}}
+\caption{SLIME: Coeficientes del modelo explicable}
+\label{fig:coefficients}
 \end{figure}
 
-Como se mencionó anteriormente, un coeficiente negativo indican que un segmento es importante, pues al removerlo la transcripción se desvía de la original considerando la distancia de Levenshtein.
+Tal como se destacó previamente, la presencia de un coeficiente negativo señala la importancia de un segmento; esto se debe a que su eliminación incrementa la discrepancia de la transcripción respecto a la original, según se mide por la distancia de Levenshtein. Para cuantificar la importancia de cada segmento en una escala de 0 a 1, los coeficientes negativos se proyectan en el eje x y luego se normalizan todos los valores. La figura \ref{fig:importance} ilustra esta normalización, mostrando la importancia asignada a cada segmento.
+
+\begin{figure}[ht]
+\centerline{\includegraphics[width=0.5\textwidth]{./images/slime.png}}
+\caption{SLIME: Importancias}
+\label{fig:importance}
+\end{figure}
 
 \subsection{Borrado de representaciones}
 
 En la figura \ref{fig:cv_imp} podemos observar el cálculo de importancias para distintas métricas evaluadas en el set de test del dataset Common Voice 11, cada celda muestra la importancia de una dimensión (columna) de los MFCCs en cada métrica (fila) para el modelo entrenado.
 
-\begin{figure}[H]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=0.5\textwidth]{images/importance_plot_all_dims.png}
-\caption{Mapa de calor de importancias $I(d)$ Normalizadas entre [-1,1] calculado usando la ecuación \ref{eq:imp}.}
+\caption{Mapa de calor de importancias $I(d)$ Normalizadas entre [-1,1] calculado usando la Ecuación \ref{eq:imp}.}
 \label{fig:cv_imp}
 \end{figure}
 
 Se puede visualizar como la dimensión 4 es la más importante para la métrica WER y CER.
 Una importancia mayor implica que al remover esa dimensión las predicciones del modelo empeoran con respecto a la métrica evaluada, por ende es una dimensión importante para el modelo.
 
-Al hacer la transformación inversa de los coeficientes de MEL podemos notar como la dimensión 4 equivale a la frecuencia de 153 Hz, esto nos indica que Whisper se basa en las frecuencias más bajas para realizar buenas predicciones.
-\begin{figure}[H]
+\begin{figure*}[ht]
 \centering
-\includegraphics[width=0.5\textwidth]{images/dim_4_erasured.png}
+\includegraphics[width=\textwidth]{images/dim_4_erasured.png}
 \caption{Ejemplo: “The new patch is less invasive than the old one, but still causes regressions.” y su espectrograma del MEL al borrar la dimensión 4.}
 \label{fig:mel_erasure_dim_4}
-\end{figure}
+\end{figure*}
 
-Para comprender mejor las interacciones del modelo, en cada paso se eliminó la dimensión más importante (Ver \ref{Anexos}), pudimos observar que las 3 dimensiones más importantes son la dimensión 4,8 y 1 que corresponden a 153 Hz, 305 Hz y 38 Hz respectivamente, todas estas bandas de MEL corresponden a frecuencias bajas del espectrograma, lo que nos revela que Whisper se enfoca mayoritariamente en las frecuencias bajas.
+Al hacer la transformación inversa de los coeficientes de MEL podemos notar como la dimensión 4 equivale a la frecuencia de 153 Hz, esto nos indica que Whisper se basa en las frecuencias más bajas para realizar buenas predicciones.
+
+Para comprender mejor las interacciones del modelo, en cada paso se eliminó la dimensión más importante (Ver Seccion \ref{9-Anexos}), pudimos observar que las 3 dimensiones más importantes son la dimensión 4,8 y 1 que corresponden a 153 Hz, 305 Hz y 38 Hz respectivamente, todas estas bandas de MEL corresponden a frecuencias bajas del espectrograma, lo que nos revela que Whisper se enfoca mayoritariamente en las frecuencias bajas.
 Esto puede suceder por varias razones:
 \begin{enumerate}
     \item \textbf{Información Fundamental en Frecuencias Bajas:} Las frecuencias bajas en un espectrograma de MEL suelen contener la mayor parte de la energía vocal y son cruciales para entender la voz humana. Estas frecuencias incluyen tonos fundamentales y formantes, que son esenciales para identificar sonidos de vocales y consonantes.
@@ -356,66 +378,68 @@ Esto puede suceder por varias razones:
    \item \textbf{Identificación de Hablantes:} Las características de las frecuencias bajas pueden ayudar a diferenciar entre distintos hablantes, lo que es útil en situaciones donde hay múltiples personas hablando.
 \end{enumerate}
 
-También podemos observar que hay importancias negativas, esto quiere decir que al eliminar esa dimensión las predicciones del modelo mejoran, lo que es un hallazgo muy interesante, ya que podríamos optimizar al modelo borrando ciertas dimensiones.
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.5\textwidth]{images/negative_importance.png}
 \caption{Mapa de calor de importancias $I(d)$ negativas.}
 \label{fig:cv_imp_neg}
 \end{figure}
-Es por esto que proponemos ORTREL un método de aprendizaje por refuerzo para aprender la representación óptima de los espectrogramas para Whisper, eliminando las representaciones con importancias negativas para aumentar el desempeño del modelo una vez ya está entrenado.
 
-\subsection{ORTREL (Optimal Representations Trough Reinforcement Learning)}
-ORTREL ...
+También podemos observar que hay importancias negativas, esto quiere decir que al eliminar esa dimensión las predicciones del modelo mejoran, lo que es un hallazgo muy interesante, ya que podríamos optimizar al modelo borrando ciertas dimensiones.
+
+
+%\subsection{ORTREL (Optimal Representations Trough Reinforcement Learning)}
+%Es por esto que proponemos ORTREL un método de aprendizaje por refuerzo para aprender la representación óptima de los espectrogramas para Whisper, eliminando las representaciones con importancias negativas para aumentar el desempeño del modelo una vez ya está entrenado.
+
+
+\section{Trabajo Futuro} \label{7-Future-Work}
+
+\section{Conclusiones} \label{8-Conclusions}
 
 \printbibliography
 
-\newpage
-
-\section{Anexos} \label{Anexos}
-
-\begin{figure}[ht]
+\section{Anexos} \label{9-Anexos}
+\begin{figure*}[h]
 \centering
-\includegraphics[width=0.5\textwidth]{images/dim_4_erasured.png}
+\includegraphics[width=0.75\textwidth]{images/dim_4_erasured.png}
 \caption{Espectrograma de potencia de MEL al eliminar la banda 4, equivalente a 153 Hz}
-\end{figure}
+\end{figure*}
 
-\begin{figure}[ht]
+\begin{figure*}[h]
 \centering
-\includegraphics[width=0.5\textwidth]{images/dim_8_erasured.png}
+\includegraphics[width=0.75\textwidth]{images/dim_8_erasured.png}
 \caption{Espectrograma de potencia de MEL al eliminar la banda 8, equivalente a 305 Hz}
-\end{figure}
+\end{figure*}
 
-\begin{figure}[ht]
+\begin{figure*}[h]
 \centering
-\includegraphics[width=0.5\textwidth]{images/dim_1_erasured.png}
+\includegraphics[width=0.75\textwidth]{images/dim_1_erasured.png}
 \caption{Espectrograma de potencia de MEL al eliminar la banda 1, equivalente a 38 Hz}
-\end{figure}
+\end{figure*}
 
-\begin{figure}[ht]
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.5\textwidth]{images/importance_plot_no_dims_4.png}
 \caption{Mapa de Importancias al eliminar la dimensión 4 de los MFCC}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.5\textwidth]{images/importance_plot_no_dims_4-8.png}
 \caption{Mapa de Importancias al eliminar la dimensión 4 y 8 de los MFCC}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.5\textwidth]{images/importance_plot_no_dims_4-8-1.png}
 \caption{Mapa de Importancias al eliminar la dimensión 4, 8 y 1 de los MFCC}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.5\textwidth]{images/importance_plot_no_dims_4-8-1-58.png}
 \caption{Mapa de Importancias al eliminar la dimensión 4, 8, 1, 58 de los MFCC}
 \end{figure}
-
 
 
 \end{document}
