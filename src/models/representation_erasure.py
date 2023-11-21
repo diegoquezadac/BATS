@@ -11,9 +11,10 @@ from typing import Tuple
 from datasets import Audio
 from datasets import Dataset
 from sklearn.preprocessing import MinMaxScaler
+from datasets.utils.logging import disable_progress_bar
 from transformers import WhisperProcessor
 from transformers import WhisperForConditionalGeneration
-from datasets.utils.logging import disable_progress_bar
+
 
 disable_progress_bar()
 
@@ -273,12 +274,18 @@ class RepresentationErasure:
 
         return scaled_data
 
-    def _plot_importance(self, importance_dict: dict) -> None:
+    def _plot_importance(self, importance_dict: dict) -> dict:
         """
         Plot importance.
 
         Args:
             importance_dict: Importance to plot.
+
+        Returns:
+            Plot details.
+            - importance_df: Importance dataframe.
+            - scaled_df: Scaled dataframe.
+            - imp_heatmap: Importance Heatmap.
         """
         importance_df = pd.DataFrame.from_dict(importance_dict, orient="index")
         scaled_df = self._apply_custom_scale(importance_df)
@@ -290,12 +297,34 @@ class RepresentationErasure:
         plt.xlabel("Dimensión MFCC")
         plt.ylabel("Métrica")
         plt.show()
+        plot_details = {
+            "importance_df": importance_df,
+            "scaled_df": scaled_df,
+            "imp_heatmap": imp_heatmap,
+        }
+        return plot_details
 
-    def explain(self) -> None:
+    def explain(self) -> dict:
         """
         Explain model.
+
+        Returns:
+            Explanation details.
+            - dataset_preprocessed: Preprocessed dataset.
+            - erasured_metrics: Erasured metrics.
+            - baseline_metrics: Baseline metrics.
+            - importance_dict: Importance.
+            - plot_details: Plot details.
         """
         dataset_preprocessed = self._preprocess_dataset(self.dataset)
         erasured_metrics, baseline_metrics = self._map_metrics(dataset_preprocessed)
         importance_dict = self._calculate_importance(erasured_metrics, baseline_metrics)
-        self._plot_importance(importance_dict)
+        plot_details = self._plot_importance(importance_dict)
+        details = {
+            "dataset_preprocessed": dataset_preprocessed,
+            "erasured_metrics": erasured_metrics,
+            "baseline_metrics": baseline_metrics,
+            "importance_dict": importance_dict,
+            "plot_details": plot_details,
+        }
+        return details
