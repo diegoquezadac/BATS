@@ -16,3 +16,4 @@ bats/
 datasets/
 *.dvi
 *.xdv
+*.$*
