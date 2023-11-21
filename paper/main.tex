@@ -212,7 +212,7 @@ La arquitectura Whisper es un enfoque simple de extremo a extremo, implementado 
 \caption{Tokens MultiTask Training Format, Fuente: OpenAI.}
 \end{figure*}
 
-Los modelos Whisper están entrenados para tareas de reconocimiento y traducción de voz, siendo capaces de transcribir audio de voz al texto en el idioma en que se habla (ASR), así como traducirlo al inglés (traducción de voz). Los investigadores de OpenAI desarrollaron modelos para estudiar la solidez de los sistemas de procesamiento del habla entrenados bajo una supervisión débil a gran escala. Existen 7 modelos de diferentes tamaños y capacidades, resumidos en la tabla \ref{tab:whisper-table}.
+Los modelos Whisper están entrenados para tareas de reconocimiento y traducción de voz, siendo capaces de transcribir audio de voz al texto en el idioma en que se habla (ASR), así como traducirlo al inglés (traducción de voz). Los investigadores de OpenAI desarrollaron modelos para estudiar la solidez de los sistemas de procesamiento del habla entrenados bajo una supervisión débil a gran escala. Existen 7 modelos de diferentes tamaños y capacidades, resumidos en el cuadro \ref{tab:whisper-table}.
 
 \begin{table}[H]
 \begin{center}
@@ -267,6 +267,14 @@ La importancia de la dimensión $d$ denotada por $I(d)$ estará dada por la dife
     I(d) = \frac{1}{|E|} \sum_{x \in E} \frac{S_{M}(x,y) - S_{M}(x,y,\neg d)}{S_{M}(x,y)}
 \end{equation}
 Para esto utilizaremos las métricas mencionadas en el marco teórico y calcularemos la importancia de cada dimensión con cada métrica dada la diferencia relativa entre los outputs del modelo.
+
+en la figura \ref{fig:re-diagram} se presenta un diagrama simplificado del algoritmo:
+
+\begin{figure}[ht]
+\centerline{\includegraphics[width=0.5\textwidth]{images/RE-Diagram.png}}
+\caption{Diagrama Representation Erasure: Primero se calculan las métricas con todos las dimensiones del espectrograma, después se aplica una máscara representada a través de un vector binario para ir removiendo ciertas dimensiones y se calcula la importancia respecto nuestro vector original.}
+\label{fig:re-diagram}
+\end{figure}
 
 \subsubsection{SLIME}
 
@@ -393,7 +401,7 @@ También podemos observar que hay importancias negativas, esto quiere decir que 
 
 
 \section{Trabajo Futuro} \label{7-Future-Work}
-
+Mirando hacia el futuro, se está desarrollando un enfoque innovador que involucra el uso de modelos de aprendizaje por refuerzo en el campo de la explicabilidad en modelos de audio de machine learning. Este enfoque se centra en la capacidad del modelo para aprender de manera autónoma a preservar o eliminar aquellas características específicas (dimensiones, segmentos temporales y ambas juntas) que contribuyen al mejoramiento del desempeño de Whisper. Al hacerlo, no solo se espera mejorar la eficiencia y la precisión de los modelos de audio, sino también incrementar su transparencia y comprensibilidad. Este método promete ofrecer una nueva perspectiva en la explicabilidad, permitiendo una introspección más profunda en los procesos de toma de decisiones del modelo y una mejor interpretación de sus resultados. A medida que avanzamos, la integración de estas técnicas de aprendizaje por refuerzo en la explicabilidad de modelos de machine learning abre un emocionante camino para futuras investigaciones y aplicaciones prácticas.
 \section{Conclusiones} \label{8-Conclusions}
 
 \printbibliography
