@@ -33,7 +33,7 @@ img[alt~="center"] {
 
 <!-- _paginate: skip -->
 
-![bg right:32% ](../images/DALL_E_bats_1.png)
+![bg right:32% ](images/DALL-E_bats_1.png)
 
 # BATS
 
@@ -64,7 +64,7 @@ Bridging Bridging Acoustic Transparency in Speech
 
 <div class="center-align">
 
-![w:750 h:200](../images/asr.png)
+![w:750 h:200](images/asr.png)
 
 **Figura 1**: Esquema de un sistema de reconocimiento de voz.
 </div>
@@ -94,6 +94,35 @@ Agregar lo siguiente:
 **TODO MUY BREVE**
 
 ---
+# 2.1 Speech recognition
+
+---
+
+# 2.2 Métricas de evaluación
+
+- WER (Word Error Rate) $= \frac{S + D + I}{N}$
+- MER (Match Error Rate) $= \frac{S + D + I}{S + D + C}$
+- WIL (Word Information Loss) $= 1 - \frac{C}{N} + \frac{C}{P}$
+- WIP (Word Information Preserved) $= \frac{C}{N} + \frac{C}{P}$
+- CER (Character Error Rate) $= \frac{S + D + I}{N}$
+
+Donde $S$ es el número de sustituciones, $D$ es el número de eliminaciones, $I$ es el número de inserciones, $N$ es el número de palabras en la referencia, $C$ es el número de palabras correctas y $P$ es el número de palabras en la predicción. (Para CER en vez de palabras se usan caracteres). 
+
+---
+
+# 2.3 Representación del sonido
+
+---
+
+# 2.4 Whisper
+
+<div class="center-align">
+
+![w:750 h:500](images/whisper_1.png)
+
+</div>
+
+---
 <!--_header: Trabajo relacionado -->
 
 # 3. Trabajo relacionado
@@ -102,8 +131,12 @@ Agregar lo siguiente:
 ---
 # 4. Propuesta de solución
 
-* Conjunto de datos: Common Voice.
-* Modelo: **Whisper**, versión Tiny.
+* Conjunto de datos: Common Voice 11.
+  * Los conjunto de entrenamiento, validación y prueba consisten en **948.736**, **16.354** y **16.354** grabaciones de audio, que corresponden al **96\%**, **2\%** y un **2\%** de los datos respectivamente. Cada grabación de audio tiene asociada una transcripción. Adicionalmente, cada grabación de audio fue grabada con un **sampling rate** de 48 kHz.
+* Modelo: **Whisper**
+  * versión Tiny.
+  * 39 M de parámetros.
+  * Lenguaje: Ingles (en).
 
 ---
 <!--_header: Propuesta de solución-->
@@ -119,7 +152,7 @@ Agregar lo siguiente:
 
 <div class="center-align">
 
-![w:1000 h:400](../paper/images/diagram.png)
+![w:1000 h:400](images/diagram.png)
 
 **Figura 2**: SLIME.
 </div>
@@ -128,8 +161,26 @@ Agregar lo siguiente:
 <!--_header: Propuesta de solución-->
 ## 4.2 Borrado de representaciones
 
+* Representación: Espectrograma de MEL (80,3000).
+* Calculo de importancia: WER, MER, WIL, WIP, CER
+* Comparación entre espectrograma original y espectrograma con dimeniones borradas.
+* Expliación: Bandas de frecuencia más importantes.
+
+---
+<div class="center-align">
+
+![w:700 h:250](images/RE-Diagram.png) ![w:700 h:300](images/mel_erasure.png)
+**Figura 2**: Borrado de Representaciones y Ejemplo con un Espectrograma Real.
+</div>
+
 ---
 # 5. Validación de la propuesta
+
+---
+# 5.1 Representation Erasure
+
+![w:370 h:350](images/importance_plot_all_dims.png) ![w:370 h:350](images/importance_plot_no_dims_4.png) ![w:370 h:350](images/importance_plot_no_dims_4-8.png)
+**Figura 2**: Importancia de las dimensiones del espectrograma, primero con todas las dimensiones, luego con las dimensiones 4 borradadas y finalmente con las dimensiones 4 y 8 borradas.
 
 ---
 # 6. Conclusiones
