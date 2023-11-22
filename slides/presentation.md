@@ -200,13 +200,14 @@ Se han propuesto explicaciones para distintas tareas:
 
 * Representación: Espectrograma de MEL (80,3000).
 * Calculo de importancia: WER, MER, WIL, WIP, CER
-* Comparación entre espectrograma original y espectrograma con dimeniones borradas.
+* Comparación entre espectrograma original y espectrograma con dimensiones borradas.
+* $I(d) = \frac{1}{|E|} \sum_{x \in E} \frac{S_{M}(x,y) - S_{M}(x,y,\neg d)}{S_{M}(x,y)}$
 * Expliación: Bandas de frecuencia más importantes.
 
 ---
 <div class="center-align">
 
-![w:700 h:250](images/RE-Diagram.png) ![w:700 h:300](images/dim_8_erasured.png)
+![w:600 h:250](images/RE-Diagram.png) ![w:700 h:300](images/dim_8_erasured.png)
 **Figura 5**: Borrado de Representaciones y Ejemplo con un Espectrograma Real.
 </div>
 
