@@ -181,12 +181,16 @@ Se han propuesto explicaciones para distintas tareas:
 ---
 # 4. Propuesta de solución
 
+El entorno de experimentación se define a continuación:
+
 * Conjunto de datos: Common Voice 11.
-  * Los conjunto de entrenamiento, validación y prueba consisten en **948.736**, **16.354** y **16.354** grabaciones de audio, que corresponden al **96\%**, **2\%** y un **2\%** de los datos respectivamente. Cada grabación de audio tiene asociada una transcripción. Adicionalmente, cada grabación de audio fue grabada con un **sampling rate** de 48 kHz.
-* Modelo: **Whisper**
-  * versión Tiny.
-  * 39 M de parámetros.
-  * Lenguaje: Ingles (en).
+* Modelo: Whisper versión Tiny.
+* CPU: Apple M1 Pro 10 Cores.
+* GPU: Apple GPU 16 Cores.
+* RAM: 16GB LPDDR5.
+* OS: macOS 14.0.
+* Software: Python 3.10, PyTorch 2.1.0, 4.3.5.0.
+
 
 ---
 <!--_header: Propuesta de solución-->
