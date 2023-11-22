@@ -327,6 +327,12 @@ En la segunda se elimina la dimensión 4 y en la tercera la dimensión 4 y 8.
 # 6. Conclusiones
 <!--_header: Conclusiones-->
 
+* Se estudió la explicabilidad de Whisper: un modelo del estado del arte en reconocimiento de voz. 
+* Se propuso SLIME: una adaptación de LIME para el reconocimiento de voz inspirada en LIME-TS (X. WU, et al. 2023).
+* SLIME provee explicaciones escuchables.
+* SLIME destaca la importancia de cada segmento de audio.
+* *Representation erasure* provee explicaciones visuales.
+* *Representation erasure* evidencia la importancia de las frecuencias bajas.
 
 ----
 <!--_header: Conclusiones-->
