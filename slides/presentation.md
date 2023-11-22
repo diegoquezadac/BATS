@@ -91,6 +91,7 @@ Bridging Bridging Acoustic Transparency in Speech
 4. Whisper.
 
 ---
+<!--_header: Marco teórico-->
 ## 2.1 Speech recognition
 
 Considerando:
@@ -108,7 +109,7 @@ $$
 
 
 ---
-
+<!--_header: Marco teórico-->
 ## 2.2 Métricas de evaluación
 
 Considerando la siguiente notación:
@@ -121,7 +122,7 @@ Considerando la siguiente notación:
 * $P$: número de palabras en la predicción.
 
 ---
-
+<!--_header: Marco teórico-->
 Podemos definir las siguientes métricas:
 
 * WER (Word Error Rate) $= \frac{S + D + I}{N}$
@@ -133,7 +134,7 @@ Podemos definir las siguientes métricas:
 > CER considera $P$ como el número de caracteres en vez de palabras.
 
 ---
-
+<!--_header: Marco teórico-->
 ## 2.3 Representación del sonido
 
 <div class="center-align">
@@ -152,7 +153,7 @@ Podemos definir las siguientes métricas:
 </div>
 
 ---
-
+<!--_header: Marco teórico-->
 ## 2.4 Whisper
 
 <div class="center-align">
@@ -168,7 +169,6 @@ Podemos definir las siguientes métricas:
 
 ---
 <!--_header: Trabajo relacionado -->
-
 # 3. Trabajo relacionado
 
 Se han propuesto explicaciones para distintas tareas:
@@ -178,7 +178,7 @@ Se han propuesto explicaciones para distintas tareas:
 * **Etiquetado de música**: Importancia de fuentes de audio.
 
 ---
-
+<!--_header: Trabajo relacionado -->
 <div class="center-align">
 
 | Publicación        | Tarea         | Métodos       |
@@ -197,6 +197,7 @@ Se han propuesto explicaciones para distintas tareas:
 > (*) Versión modificada de LIME.
 
 ---
+<!--_header: Propuesta de solución-->
 # 4. Propuesta de solución
 
 El entorno de experimentación se define a continuación:
@@ -221,7 +222,7 @@ El entorno de experimentación se define a continuación:
 * Explicación: Coeficientes asociados a cada segmento.
 
 ---
-
+<!--_header: Propuesta de solución-->
 <div class="center-align">
 
 ![w:1000 h:400](images/diagram.png)
@@ -243,6 +244,7 @@ El entorno de experimentación se define a continuación:
 * Expliación: Bandas de frecuencia más importantes.
 
 ---
+<!--_header: Propuesta de solución-->
 <div class="center-align">
 
 ![w:600 h:250](images/RE-Diagram.png) ![w:700 h:300](images/dim_8_erasured.png)
@@ -254,7 +256,9 @@ El entorno de experimentación se define a continuación:
 </div>
 
 ---
+<!--_header: Validación de la propuesta-->
 # 5. Validación de la propuesta
+
 ---
 <!--_header: Validación de la propuesta-->
 ## 5.1 SLIME
@@ -289,7 +293,8 @@ El entorno de experimentación se define a continuación:
 </div>
 
 ---
-## 5.1 Representation Erasure
+<!--_header: Validación de la propuesta-->
+## 5.2 Representation Erasure
 
 <div class="figure-container">
 
@@ -320,9 +325,11 @@ En la segunda se elimina la dimensión 4 y en la tercera la dimensión 4 y 8.
 
 ---
 # 6. Conclusiones
+<!--_header: Conclusiones-->
+
 
 ----
-
+<!--_header: Conclusiones-->
 ## 6.1 Trabajo futuro
 
 Como trabajo futuro se propone:
@@ -339,8 +346,3 @@ Muchas gracias por su atención.
 
 
 </div>
-
-
----
-# Anexos
-
