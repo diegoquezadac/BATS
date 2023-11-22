@@ -52,7 +52,7 @@ Bridging Bridging Acoustic Transparency in Speech
 2. Marco teórico.
 3. Trabajo relacionado
 4. Propuesta de solución.
-5. Validación de la propuesta.
+5. Resultados.
 6. Conclusiones.
 
 ---
@@ -256,11 +256,11 @@ El entorno de experimentación se define a continuación:
 </div>
 
 ---
-<!--_header: Validación de la propuesta-->
-# 5. Validación de la propuesta
+<!--_header: Resultados-->
+# 5. Resultados
 
 ---
-<!--_header: Validación de la propuesta-->
+<!--_header: Resultados-->
 ## 5.1 SLIME
 
 * $y:$ *it is a busy market town that serves a large surrounding area*.
@@ -293,7 +293,7 @@ El entorno de experimentación se define a continuación:
 </div>
 
 ---
-<!--_header: Validación de la propuesta-->
+<!--_header: Resultados-->
 ## 5.2 Representation Erasure
 
 <div class="figure-container">
