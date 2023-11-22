@@ -214,7 +214,10 @@ Se han propuesto explicaciones para distintas tareas:
 # 5. Validación de la propuesta
 
 ---
-# 5.1 Representation Erasure
+## 5.1 SLIME
+
+---
+## 5.1 Representation Erasure
 
 ![w:370 h:350](images/importance_plot_all_dims.png) ![w:370 h:350](images/importance_plot_no_dims_4.png) ![w:370 h:350](images/importance_plot_no_dims_4-8.png)
 **Figura 6**: Importancia de las dimensiones del espectrograma, primero con todas las dimensiones, luego con las dimensiones 4 borradadas y finalmente con las dimensiones 4 y 8 borradas.
@@ -223,6 +226,8 @@ Se han propuesto explicaciones para distintas tareas:
 # 6. Conclusiones
 
 ----
+
+## 6.1 Trabajo futuro
 
 Como trabajo futuro se propone:
 
