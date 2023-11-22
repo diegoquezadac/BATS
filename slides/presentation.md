@@ -93,14 +93,19 @@ Bridging Bridging Acoustic Transparency in Speech
 ---
 ## 2.1 Speech recognition
 
-* Sea $\mathbf{X} = (x^{(1)}, x^{(2)} ,\dots, x^{(T)})$ una secuencia de audio de largo $T$ e $y = (y_1, y_2, \dots, y_N)$ una secuencia de palabras de largo $N$.
-* La tarea de reconocimiento de voz se define como:
+Considerando:
+
+* $\mathbf{X} = (x^{(1)}, x^{(2)} ,\dots, x^{(T)})$: una secuencia de audio de largo $T$ 
+* $\mathbf{y} = (y_1, y_2, \dots, y_N)$: una secuencia de palabras de largo $N$.
+* $P$: Distribución de probabilidad condicional que relaciona $\mathbf{X}$ con $\mathbf{y}$.
+
+La tarea de reconocimiento de voz se define como:
 
 $$
-    f^\ast(\mathbf{X}) = \argmax_{\mathbf{y}} P^\ast(\mathbf{y}| \mathbf{X} = X)
+    f^\ast(\mathbf{X}) = \argmax_{\mathbf{y}} P(\mathbf{y}| \mathbf{X} = X)
 $$
 
-* Donde $P^\ast$ es la verdadera distribución de probabilidad condicional que relaciona las entradas $\mathbf{X}$ con las salidas $\mathbf{y}$.
+
 
 ---
 
