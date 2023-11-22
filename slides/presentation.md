@@ -242,8 +242,32 @@ Se han propuesto explicaciones para distintas tareas:
 ---
 ## 5.1 Representation Erasure
 
-![w:370 h:350](images/importance_plot_all_dims.png) ![w:370 h:350](images/importance_plot_no_dims_4.png) ![w:370 h:350](images/importance_plot_no_dims_4-8.png)
-**Figura 8**: Importancia de las dimensiones del espectrograma, primero con todas las dimensiones, luego con las dimensiones 4 borradadas y finalmente con las dimensiones 4 y 8 borradas.
+<div class="figure-container">
+
+<div class="center-align">
+
+![w:370 h:350](images/importance_plot_all_dims.png)
+</div>
+
+<div class="center-align">
+
+![w:370 h:350](images/importance_plot_no_dims_4.png)
+</div>
+
+<div class="center-align">
+
+![w:370 h:350](images/importance_plot_no_dims_4-8.png)
+</div>
+
+</div>
+
+<div class="center-align">
+
+**Figura 8**: Importancia de las dimensiones del espectrograma
+</div>
+
+> En la primera visualización se consideran todas las dimensiones.
+En la segunda se elimina la dimensión 4 y en la tercera la dimensión 4 y 8.
 
 ---
 # 6. Conclusiones
