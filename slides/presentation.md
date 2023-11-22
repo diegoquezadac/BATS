@@ -191,7 +191,7 @@ Se han propuesto explicaciones para distintas tareas:
 <div class="center-align">
 
 ![w:700 h:250](images/RE-Diagram.png) ![w:700 h:300](images/mel_erasure.png)
-**Figura 2**: Borrado de Representaciones y Ejemplo con un Espectrograma Real.
+**Figura 3**: Borrado de Representaciones y Ejemplo con un Espectrograma Real.
 </div>
 
 ---
@@ -201,7 +201,7 @@ Se han propuesto explicaciones para distintas tareas:
 # 5.1 Representation Erasure
 
 ![w:370 h:350](images/importance_plot_all_dims.png) ![w:370 h:350](images/importance_plot_no_dims_4.png) ![w:370 h:350](images/importance_plot_no_dims_4-8.png)
-**Figura 2**: Importancia de las dimensiones del espectrograma, primero con todas las dimensiones, luego con las dimensiones 4 borradadas y finalmente con las dimensiones 4 y 8 borradas.
+**Figura 4**: Importancia de las dimensiones del espectrograma, primero con todas las dimensiones, luego con las dimensiones 4 borradadas y finalmente con las dimensiones 4 y 8 borradas.
 
 ---
 # 6. Conclusiones
