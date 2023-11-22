@@ -33,7 +33,7 @@ img[alt~="center"] {
 
 <!-- _paginate: skip -->
 
-![bg right:32% ](../images/DALL·E%202023-11-21%2018.05.01%20-%20A%20photorealistic%20image%20of%20a%20bat%20with%20vibrant,%20observant%20eyes,%20hanging%20upside%20down%20from%20a%20slender%20tree%20branch%20under%20the%20soft%20glow%20of%20moonlight.%20Its%20fur.png)
+![bg right:32% ](../images/DALL_E_bats_1.png)
 
 # BATS
 
