@@ -268,7 +268,7 @@ La importancia de la dimensión $d$ denotada por $I(d)$ estará dada por la dife
 \end{equation}
 Para esto utilizaremos las métricas mencionadas en el marco teórico y calcularemos la importancia de cada dimensión con cada métrica dada la diferencia relativa entre los outputs del modelo.
 
-en la figura \ref{fig:re-diagram} se presenta un diagrama simplificado del algoritmo:
+en la Figura \ref{fig:re-diagram} se presenta un diagrama simplificado del algoritmo:
 
 \begin{figure}[ht]
 \centerline{\includegraphics[width=0.5\textwidth]{images/RE-Diagram.png}}
@@ -293,7 +293,7 @@ En el algoritmo \ref{alg:slime} se resume el algoritmo propuesto para obtener la
 \begin{algorithmic}[1]
 \State $S \gets \emptyset$
 \State $f \gets$ Black-box model
-\State $g \gets $ Whitle-box model
+\State $g \gets $ White-box model
 \State $n$ $\gets$ Number of segments of 100 ms in audio
 \State $x \gets$ Original audio instance
 \State $y \gets f(x)$
@@ -311,7 +311,7 @@ En el algoritmo \ref{alg:slime} se resume el algoritmo propuesto para obtener la
 \label{alg:slime}
 \end{algorithm}
 
-Adicionalmente, en la figura \ref{fig:diagram} se presenta un diagrama simplificado del algoritmo:
+Adicionalmente, en la Figura \ref{fig:diagram} se presenta un diagrama simplificado del algoritmo:
 
 \begin{figure}[ht]
 \centerline{\includegraphics[width=0.5\textwidth]{./images/diagram.png}}
@@ -355,7 +355,7 @@ Tal como se destacó previamente, la presencia de un coeficiente negativo señal
 
 \subsection{Borrado de representaciones}
 
-En la figura \ref{fig:cv_imp} podemos observar el cálculo de importancias para distintas métricas evaluadas en el set de test del dataset Common Voice 11, cada celda muestra la importancia de una dimensión (columna) de los MFCCs en cada métrica (fila) para el modelo entrenado.
+En la Figura \ref{fig:cv_imp} podemos observar el cálculo de importancias para distintas métricas evaluadas en el set de test del dataset Common Voice 11, cada celda muestra la importancia de una dimensión (columna) de los MFCCs en cada métrica (fila) para el modelo entrenado.
 
 \begin{figure}[ht]
 \centering
@@ -402,7 +402,15 @@ También podemos observar que hay importancias negativas, esto quiere decir que 
 
 \section{Trabajo Futuro} \label{7-Future-Work}
 Mirando hacia el futuro, se está desarrollando un enfoque innovador que involucra el uso de modelos de aprendizaje por refuerzo en el campo de la explicabilidad en modelos de audio de machine learning. Este enfoque se centra en la capacidad del modelo para aprender de manera autónoma a preservar o eliminar aquellas características específicas (dimensiones, segmentos temporales y ambas juntas) que contribuyen al mejoramiento del desempeño de Whisper. Al hacerlo, no solo se espera mejorar la eficiencia y la precisión de los modelos de audio, sino también incrementar su transparencia y comprensibilidad. Este método promete ofrecer una nueva perspectiva en la explicabilidad, permitiendo una introspección más profunda en los procesos de toma de decisiones del modelo y una mejor interpretación de sus resultados. A medida que avanzamos, la integración de estas técnicas de aprendizaje por refuerzo en la explicabilidad de modelos de machine learning abre un emocionante camino para futuras investigaciones y aplicaciones prácticas.
+
 \section{Conclusiones} \label{8-Conclusions}
+Este estudio resalta con firmeza la importancia crucial de la explicabilidad en los modelos avanzados de reconocimiento automático de voz (ASR), un elemento frecuentemente subestimado en la investigación y desarrollo de inteligencia artificial (IA). 
+Mediante la aplicación rigurosa de técnicas de IA explicativa (XAI) como SLIME y Representation Erasure, hemos proporcionado una comprensión detallada y valiosa sobre el funcionamiento interno de estos sistemas.
+Al analizar modelos punteros como Whisper de OpenAI y utilizar conjuntos de datos extensos como CommonVoice, hemos identificado que las frecuencias bajas son vitales para la precisión de los modelos ASR, desempeñando un papel determinante en la interpretación efectiva de variaciones acústicas y lingüísticas. 
+Estos descubrimientos son fundamentales para el diseño de sistemas ASR más precisos y transparentes, esenciales para su aplicación confiable en escenarios del mundo real. 
+Además, el estudio sugiere que la incorporación de estrategias de aprendizaje por refuerzo en la explicabilidad de modelos de audio constituye una vanguardista y prometedora dirección de investigación. 
+Este enfoque interdisciplinario, que combina técnicas avanzadas de deep learning, XAI y conocimientos en lingüística computacional, es clave para el progreso en el desarrollo de sistemas ASR no solo altamente efectivos, sino también comprensibles y accesibles, marcando un paso significativo hacia una interacción más natural y transparente con la tecnología de voz. 
+Este trabajo subraya la necesidad de una perspectiva más holística en la IA, donde la eficiencia y la explicabilidad coexisten como pilares de la innovación tecnológica.
 
 \printbibliography
 
