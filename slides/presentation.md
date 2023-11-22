@@ -213,15 +213,36 @@ Se han propuesto explicaciones para distintas tareas:
 
 ---
 # 5. Validación de la propuesta
-
 ---
+<!--_header: Validación de la propuesta-->
 ## 5.1 SLIME
+
+* Considerando $x:$ *it is a busy market town that serves a large surrounding area*.
+* A continuación, se explica la transcripción de Whisper usando SLIME.
+
+<div class="figure-container">
+
+<div class="center-align">
+
+![w:500 h:300](images/coefficients.png)
+
+**Figura 6**: Coeficientes de $g$
+</div>
+
+<div class="center-align">
+
+![w:500 h:300](images/slime.png)
+
+**Figura 7**: Importancias de $g$
+</div>
+
+</div>
 
 ---
 ## 5.1 Representation Erasure
 
 ![w:370 h:350](images/importance_plot_all_dims.png) ![w:370 h:350](images/importance_plot_no_dims_4.png) ![w:370 h:350](images/importance_plot_no_dims_4-8.png)
-**Figura 6**: Importancia de las dimensiones del espectrograma, primero con todas las dimensiones, luego con las dimensiones 4 borradadas y finalmente con las dimensiones 4 y 8 borradas.
+**Figura 8**: Importancia de las dimensiones del espectrograma, primero con todas las dimensiones, luego con las dimensiones 4 borradadas y finalmente con las dimensiones 4 y 8 borradas.
 
 ---
 # 6. Conclusiones
