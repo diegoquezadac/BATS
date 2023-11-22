@@ -82,16 +82,10 @@ Bridging Bridging Acoustic Transparency in Speech
 
 # 2. Marco teórico
 
-Agregar lo siguiente:
-
-
 1. Speech recognition.
 2. Métricas de evaluación.
 3. Representación del sonido (señal, espectrograma, y mfcc).
 4. Whisper.
-5. Opcional: LIME y borrado de representaciones.
-
-**TODO MUY BREVE**
 
 ---
 ## 2.1 Speech recognition
@@ -121,6 +115,17 @@ Donde $S$ es el número de sustituciones, $D$ es el número de eliminaciones, $I
 
 ## 2.3 Representación del sonido
 
+<div class="center-align">
+
+![w:500 h:240](images/waveshow.png) ![w:500 h:240](images/spectogram_1.png)
+
+![w:500 h:240](images/whisper_mel.png)
+
+**Figura 2**: Distintas representaciones del sonido.
+(Waveform, Spectogram and Log Mel Spectogram)
+</div>
+
+
 ---
 
 ## 2.4 Whisper
@@ -128,6 +133,8 @@ Donde $S$ es el número de sustituciones, $D$ es el número de eliminaciones, $I
 <div class="center-align">
 
 ![w:750 h:500](images/whisper_1.png)
+
+**Figura 3**: Arquitectura Whisper, Fuente: OpenAI
 
 </div>
 
@@ -184,7 +191,7 @@ Se han propuesto explicaciones para distintas tareas:
 
 ![w:1000 h:400](images/diagram.png)
 
-**Figura 2**: SLIME.
+**Figura 4**: SLIME.
 </div>
 
 ---
@@ -199,8 +206,8 @@ Se han propuesto explicaciones para distintas tareas:
 ---
 <div class="center-align">
 
-![w:700 h:250](images/RE-Diagram.png) ![w:700 h:300](images/mel_erasure.png)
-**Figura 3**: Borrado de Representaciones y Ejemplo con un Espectrograma Real.
+![w:700 h:250](images/RE-Diagram.png) ![w:700 h:300](images/dim_8_erasured.png)
+**Figura 5**: Borrado de Representaciones y Ejemplo con un Espectrograma Real.
 </div>
 
 ---
@@ -210,7 +217,7 @@ Se han propuesto explicaciones para distintas tareas:
 # 5.1 Representation Erasure
 
 ![w:370 h:350](images/importance_plot_all_dims.png) ![w:370 h:350](images/importance_plot_no_dims_4.png) ![w:370 h:350](images/importance_plot_no_dims_4-8.png)
-**Figura 4**: Importancia de las dimensiones del espectrograma, primero con todas las dimensiones, luego con las dimensiones 4 borradadas y finalmente con las dimensiones 4 y 8 borradas.
+**Figura 6**: Importancia de las dimensiones del espectrograma, primero con todas las dimensiones, luego con las dimensiones 4 borradadas y finalmente con las dimensiones 4 y 8 borradas.
 
 ---
 # 6. Conclusiones
