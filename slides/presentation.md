@@ -94,11 +94,11 @@ Agregar lo siguiente:
 **TODO MUY BREVE**
 
 ---
-# 2.1 Speech recognition
+## 2.1 Speech recognition
 
 ---
 
-# 2.2 Métricas de evaluación
+## 2.2 Métricas de evaluación
 
 - WER (Word Error Rate) $= \frac{S + D + I}{N}$
 - MER (Match Error Rate) $= \frac{S + D + I}{S + D + C}$
@@ -110,11 +110,11 @@ Donde $S$ es el número de sustituciones, $D$ es el número de eliminaciones, $I
 
 ---
 
-# 2.3 Representación del sonido
+## 2.3 Representación del sonido
 
 ---
 
-# 2.4 Whisper
+## 2.4 Whisper
 
 <div class="center-align">
 
@@ -127,6 +127,27 @@ Donde $S$ es el número de sustituciones, $D$ es el número de eliminaciones, $I
 
 # 3. Trabajo relacionado
 
+Se han propuesto explicaciones para distintas tareas:
+
+* **Reconocimiento de voz**: Segmentos de audio que son causas mínimas y suficientes.
+* **Reconocimiento de fonemas**: Importancia de segmentos de audio.
+* **Etiquetado de música**: Importancia de fuentes de audio.
+
+---
+
+<div class="center-align">
+
+| Publicación        | Tarea         | Métodos       |
+|----------------|---------------|---------------|
+| X. Wu, et al. (2020) | Reconocimiento de voz | SFL, Causal, LIME (*) |
+| Haunschmid, et al. (2020) | Etiquetado de música | LIME (*) |
+| X. Wu, et al. (2023) | Reconocimiento de fonemas | LIME (*) |
+
+
+**Tabla 1**: Resumen de trabajos relacionados
+</div>
+
+> (*) Versión modificada de LIME.
 
 ---
 # 4. Propuesta de solución
