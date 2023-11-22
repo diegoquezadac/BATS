@@ -217,21 +217,22 @@ Se han propuesto explicaciones para distintas tareas:
 <!--_header: Validación de la propuesta-->
 ## 5.1 SLIME
 
-* Considerando $x:$ *it is a busy market town that serves a large surrounding area*.
+* $y:$ *it is a busy market town that serves a large surrounding area*.
+* $y^\prime:$ *it is a busy market town that serves a large **surrounded** area*.
 * A continuación, se explica la transcripción de Whisper usando SLIME.
 
 <div class="figure-container">
 
 <div class="center-align">
 
-![w:500 h:300](images/coefficients.png)
+![w:400 h:250](images/coefficients.png)
 
 **Figura 6**: Coeficientes de $g$
 </div>
 
 <div class="center-align">
 
-![w:500 h:300](images/slime.png)
+![w:400 h:250](images/slime.png)
 
 **Figura 7**: Importancias de $g$
 </div>
