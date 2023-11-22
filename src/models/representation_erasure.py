@@ -23,6 +23,15 @@ class RepresentationErasure:
     """
     Representation Erasure.
     XAI Method for explaining speech recognition models based on Representation Erasure.
+
+    Args:
+        dataset: Dataset to explain.
+        max_examples: Max number of examples to explain.
+        text_column_name: Name of the column with the text.
+        whisper_model: Model to use for explaining.
+        sample_rate: Sample rate to use.
+        max_dims_to_erase: Max number of dimensions to erase.
+        deterministic: Whether to use deterministic mode or not.
     """
 
     def __init__(
@@ -33,7 +42,9 @@ class RepresentationErasure:
         whisper_model: str = "openai/whisper-tiny",
         sample_rate: int = 16_000,
         max_dims_to_erase: int = 80,
+        deterministic: bool = True,
     ) -> None:
+        
         self.dataset = dataset
         self.max_examples = max_examples
         self.text_column_name = text_column_name
@@ -42,6 +53,7 @@ class RepresentationErasure:
         self.model = WhisperForConditionalGeneration.from_pretrained(whisper_model)
         self.sample_rate = sample_rate
         self.model.config.forced_decoder_ids = None
+        self.deterministic = deterministic
 
     def _preprocess_dataset(self, dataset: Dataset) -> Dataset:
         """
@@ -55,13 +67,11 @@ class RepresentationErasure:
         """
         print("Preprocessing dataset...")
         if self.max_examples > 0:
+            if not self.deterministic:
+                dataset = dataset.shuffle()
             dataset = dataset.select(range(self.max_examples))
-        dataset_resampled = dataset.cast_column(
-            "audio", Audio(sampling_rate=self.sample_rate)
-        )
-        dataset_shrinked = dataset_resampled.select_columns(
-            ["audio", self.text_column_name]
-        )
+        dataset_resampled = dataset.cast_column("audio", Audio(sampling_rate=self.sample_rate))
+        dataset_shrinked = dataset_resampled.select_columns(["audio", self.text_column_name])
         dataset_preprocessed = dataset_shrinked.map(self._apply_processor)
 
         return dataset_preprocessed
@@ -77,8 +87,10 @@ class RepresentationErasure:
             Preprocessed batch.
         """
         batch["input_features"] = self.processor(
-            batch["audio"]["array"], sampling_rate=self.sample_rate, return_tensors="pt"
-        ).input_features
+            batch["audio"]["array"], 
+            sampling_rate=self.sample_rate, 
+            return_tensors="pt").input_features
+        
         return batch
 
     def _apply_erasure(self, batch: Any, dims: list) -> Any:
@@ -96,6 +108,7 @@ class RepresentationErasure:
         for dim in dims:
             features[:, dim] = 0
         batch["input_features"] = features
+
         return batch
 
     def _get_reference(self, batch: Any) -> Any:
@@ -108,9 +121,8 @@ class RepresentationErasure:
         Returns:
             Batch with reference.
         """
-        batch["reference"] = self.processor.tokenizer._normalize(
-            batch[self.text_column_name]
-        )
+        batch["reference"] = self.processor.tokenizer._normalize(batch[self.text_column_name])
+
         return batch
 
     def _get_predictions(self, batch: Any) -> Any:
@@ -128,6 +140,7 @@ class RepresentationErasure:
             predicted_ids = self.model.generate(input_features)[0]
         transcription = self.processor.decode(predicted_ids)
         batch["transcription"] = self.processor.tokenizer._normalize(transcription)
+
         return batch
 
     def _calculate_metrics(self, reference: str, hypothesis: str) -> dict:
@@ -152,7 +165,7 @@ class RepresentationErasure:
 
         return metrics
 
-    def _map_metrics(self, prep_dataset: Dataset) -> Tuple[dict, dict]:
+    def _map_metrics(self, prep_dataset: Dataset) -> Tuple[dict, dict, dict]:
         """
         Map metrics.
 
@@ -160,9 +173,10 @@ class RepresentationErasure:
             prep_dataset: Preprocessed dataset.
 
         Returns:
-            Tuple with erasured metrics and baseline metrics.
+            Tuple with erasured metrics, baseline metrics and predictions details.
         """
         erasured_metrics = {}
+        preds_details = {}
         print("Generating original reference...")
         reference = prep_dataset.map(self._get_reference)
 
@@ -171,26 +185,33 @@ class RepresentationErasure:
 
         print("Calculating baseline metrics...")
         baseline_metrics = self._calculate_metrics(
-            reference["reference"], baseline_preds["transcription"]
+            reference["reference"], 
+            baseline_preds["transcription"]
         )
+        preds_details['baseline'] = {
+            'input_features': baseline_preds['input_features'],
+            'transcription': baseline_preds['transcription'],
+        }
 
         for dim in tqdm(range(self.max_dims), desc="Erasuring Dimensions"):
             dataset_erasured = prep_dataset.map(
-                self._apply_erasure, fn_kwargs={"dims": [dim]}
+                self._apply_erasure, 
+                fn_kwargs={"dims": [dim]}
             )
             erasured_preds = dataset_erasured.map(self._get_predictions)
             dim_metrics = self._calculate_metrics(
-                reference["reference"], erasured_preds["transcription"]
+                reference["reference"], 
+                erasured_preds["transcription"]
             )
             erasured_metrics[dim] = dim_metrics
+            preds_details[dim] = {
+                'input_features': erasured_preds['input_features'],
+                'transcription': erasured_preds['transcription'],
+            }
 
-        return erasured_metrics, baseline_metrics
+        return erasured_metrics, baseline_metrics, preds_details
 
-    def _calculate_importance(
-        self,
-        erasured_metrics: dict,
-        baseline_metrics: dict,
-    ) -> dict:
+    def _calculate_importance(self, erasured_metrics: dict, baseline_metrics: dict) -> dict:
         """
         Calculate importance.
 
@@ -209,11 +230,7 @@ class RepresentationErasure:
             importance_dict[key] = {}
             total = 0
             for metric, value in objective.items():
-                importance = (
-                    -1
-                    * (baseline_metrics[metric] - value)
-                    / (baseline_metrics[metric] + 1e-8)
-                )
+                importance = -1 * (baseline_metrics[metric] - value) / (baseline_metrics[metric] + 1e-8)
                 if metric == "WIP":
                     importance = -1 * importance
                 importance_dict[key][metric] = importance
@@ -267,8 +284,7 @@ class RepresentationErasure:
         print("Scaling importance...")
         scaled_data = pd.DataFrame(
             {
-                col: self._custom_scale_importance(dataframe[col])
-                for col in dataframe.columns
+                col: self._custom_scale_importance(dataframe[col]) for col in dataframe.columns
             }
         )
 
@@ -302,6 +318,7 @@ class RepresentationErasure:
             "scaled_df": scaled_df,
             "imp_heatmap": imp_heatmap,
         }
+
         return plot_details
 
     def explain(self) -> dict:
@@ -317,14 +334,16 @@ class RepresentationErasure:
             - plot_details: Plot details.
         """
         dataset_preprocessed = self._preprocess_dataset(self.dataset)
-        erasured_metrics, baseline_metrics = self._map_metrics(dataset_preprocessed)
+        erasured_metrics, baseline_metrics, preds_detail = self._map_metrics(dataset_preprocessed)
         importance_dict = self._calculate_importance(erasured_metrics, baseline_metrics)
         plot_details = self._plot_importance(importance_dict)
         details = {
             "dataset_preprocessed": dataset_preprocessed,
+            "predictions" : preds_detail,
             "erasured_metrics": erasured_metrics,
             "baseline_metrics": baseline_metrics,
             "importance_dict": importance_dict,
             "plot_details": plot_details,
         }
+
         return details
