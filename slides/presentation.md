@@ -103,13 +103,26 @@ $$
 
 ## 2.2 Métricas de evaluación
 
-- WER (Word Error Rate) $= \frac{S + D + I}{N}$
-- MER (Match Error Rate) $= \frac{S + D + I}{S + D + C}$
-- WIL (Word Information Loss) $= 1 - \frac{C}{N} + \frac{C}{P}$
-- WIP (Word Information Preserved) $= \frac{C}{N} + \frac{C}{P}$
-- CER (Character Error Rate) $= \frac{S + D + I}{N}$
+Considerando la siguiente notación:
 
-Donde $S$ es el número de sustituciones, $D$ es el número de eliminaciones, $I$ es el número de inserciones, $N$ es el número de palabras en la referencia, $C$ es el número de palabras correctas y $P$ es el número de palabras en la predicción. (Para CER en vez de palabras se usan caracteres). 
+* $S$: número de sustituciones.
+* $D$: número de eliminaciones
+* $I$: número de inserciones
+* $N$: número de palabras en la referencia
+* $C$: número de palabras correctas
+* $P$: número de palabras en la predicción.
+
+---
+
+Podemos definir las siguientes métricas:
+
+* WER (Word Error Rate) $= \frac{S + D + I}{N}$
+* MER (Match Error Rate) $= \frac{S + D + I}{S + D + C}$
+* WIL (Word Information Loss) $= 1 - \frac{C}{N} + \frac{C}{P}$
+* WIP (Word Information Preserved) $= \frac{C}{N} + \frac{C}{P}$
+* CER (Character Error Rate) $= \frac{S + D + I}{N}$
+
+> CER considera $P$ como el número de caracteres en vez de palabras.
 
 ---
 
