@@ -65,6 +65,9 @@ Bridging Bridging Acoustic Transparency in Speech
 <div class="center-align">
 
 ![w:750 h:200](images/asr.png)
+</div>
+
+<div class="center-align" style="font-size: 21px">
 
 **Figura 1**: Esquema de un sistema de reconocimiento de voz.
 </div>
@@ -130,14 +133,18 @@ Podemos definir las siguientes métricas:
 
 <div class="center-align">
 
-![w:500 h:240](images/waveshow.png) ![w:500 h:240](images/spectogram_1.png)
+![w:400 h:200](images/waveshow.png) ![w:400 h:200](images/spectogram_1.png)
 
-![w:500 h:240](images/whisper_mel.png)
+![w:400 h:200](images/whisper_mel.png)
+
+</div>
+
+<div class="center-align" style="font-size: 21px">
 
 **Figura 2**: Distintas representaciones del sonido.
 (Waveform, Spectogram and Log Mel Spectogram)
-</div>
 
+</div>
 
 ---
 
@@ -147,8 +154,11 @@ Podemos definir las siguientes métricas:
 
 ![w:500 h:400](images/whisper_1.png)
 
-**Figura 3**: Arquitectura Whisper, Fuente: OpenAI
+</div>
 
+<div class="center-align" style="font-size: 21px">
+
+**Figura 3**: Arquitectura Whisper, Fuente: OpenAI
 </div>
 
 ---
@@ -172,6 +182,9 @@ Se han propuesto explicaciones para distintas tareas:
 | Haunschmid, et al. (2020) | Etiquetado de música | LIME (*) |
 | X. Wu, et al. (2023) | Reconocimiento de fonemas | LIME (*) |
 
+</div>
+
+<div class="center-align" style="font-size: 21px">
 
 **Tabla 1**: Resumen de trabajos relacionados
 </div>
@@ -207,6 +220,9 @@ El entorno de experimentación se define a continuación:
 <div class="center-align">
 
 ![w:1000 h:400](images/diagram.png)
+</div>
+
+<div class="center-align" style="font-size: 21px">
 
 **Figura 4**: SLIME.
 </div>
@@ -225,6 +241,10 @@ El entorno de experimentación se define a continuación:
 <div class="center-align">
 
 ![w:600 h:250](images/RE-Diagram.png) ![w:700 h:300](images/dim_8_erasured.png)
+</div>
+
+<div class="center-align" style="font-size: 21px">
+
 **Figura 5**: Borrado de Representaciones y Ejemplo con un Espectrograma Real.
 </div>
 
@@ -244,14 +264,21 @@ El entorno de experimentación se define a continuación:
 
 ![w:400 h:250](images/coefficients.png)
 
+<div class="center-align" style="font-size: 21px">
+
 **Figura 6**: Coeficientes de $g$
+</div>
+
 </div>
 
 <div class="center-align">
 
 ![w:400 h:250](images/slime.png)
 
-**Figura 7**: Importancias de $g$
+<div class="center-align" style="font-size: 21px">
+
+**Figura 7**: Importancias SLIME
+</div>
 </div>
 
 </div>
@@ -278,7 +305,7 @@ El entorno de experimentación se define a continuación:
 
 </div>
 
-<div class="center-align">
+<div class="center-align" style="font-size: 21px">
 
 **Figura 8**: Importancia de las dimensiones del espectrograma
 </div>
