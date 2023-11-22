@@ -145,7 +145,7 @@ Podemos definir las siguientes métricas:
 
 <div class="center-align">
 
-![w:750 h:500](images/whisper_1.png)
+![w:500 h:400](images/whisper_1.png)
 
 **Figura 3**: Arquitectura Whisper, Fuente: OpenAI
 
