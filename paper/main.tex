@@ -401,16 +401,18 @@ También podemos observar que hay importancias negativas, esto quiere decir que 
 
 
 \section{Trabajo Futuro} \label{7-Future-Work}
+
 Mirando hacia el futuro, se está desarrollando un enfoque innovador que involucra el uso de modelos de aprendizaje por refuerzo en el campo de la explicabilidad en modelos de audio de machine learning. Este enfoque se centra en la capacidad del modelo para aprender de manera autónoma a preservar o eliminar aquellas características específicas (dimensiones, segmentos temporales y ambas juntas) que contribuyen al mejoramiento del desempeño de Whisper. Al hacerlo, no solo se espera mejorar la eficiencia y la precisión de los modelos de audio, sino también incrementar su transparencia y comprensibilidad. Este método promete ofrecer una nueva perspectiva en la explicabilidad, permitiendo una introspección más profunda en los procesos de toma de decisiones del modelo y una mejor interpretación de sus resultados. A medida que avanzamos, la integración de estas técnicas de aprendizaje por refuerzo en la explicabilidad de modelos de machine learning abre un emocionante camino para futuras investigaciones y aplicaciones prácticas.
 
+Adicionalmente, se propone la creación la librería \href{https://github.com/diegoquezadac/BATS}{BATS} para la explicación de modelos de reconocimiento de voz, la cual se encuentra en desarrollo y se espera que esté disponible en los próximos meses.
+
 \section{Conclusiones} \label{8-Conclusions}
-Este estudio resalta con firmeza la importancia crucial de la explicabilidad en los modelos avanzados de reconocimiento automático de voz (ASR), un elemento frecuentemente subestimado en la investigación y desarrollo de inteligencia artificial (IA). 
-Mediante la aplicación rigurosa de técnicas de IA explicativa (XAI) como SLIME y Representation Erasure, hemos proporcionado una comprensión detallada y valiosa sobre el funcionamiento interno de estos sistemas.
-Al analizar modelos punteros como Whisper de OpenAI y utilizar conjuntos de datos extensos como CommonVoice, hemos identificado que las frecuencias bajas son vitales para la precisión de los modelos ASR, desempeñando un papel determinante en la interpretación efectiva de variaciones acústicas y lingüísticas. 
-Estos descubrimientos son fundamentales para el diseño de sistemas ASR más precisos y transparentes, esenciales para su aplicación confiable en escenarios del mundo real. 
-Además, el estudio sugiere que la incorporación de estrategias de aprendizaje por refuerzo en la explicabilidad de modelos de audio constituye una vanguardista y prometedora dirección de investigación. 
-Este enfoque interdisciplinario, que combina técnicas avanzadas de deep learning, XAI y conocimientos en lingüística computacional, es clave para el progreso en el desarrollo de sistemas ASR no solo altamente efectivos, sino también comprensibles y accesibles, marcando un paso significativo hacia una interacción más natural y transparente con la tecnología de voz. 
-Este trabajo subraya la necesidad de una perspectiva más holística en la IA, donde la eficiencia y la explicabilidad coexisten como pilares de la innovación tecnológica.
+
+En el presente estudio, se investigó cómo dotar de explicabilidad a Whisper a través de dos métodos de XAI. Es importante destacar el carácter novedoso de esta investigación, ya que es un primer acercamiento a la explicabilidad en modelos del estado del arte en la tarea de reconocimiento de voz. Adicionalmente, se propuso el algoritmo SLIME: una variante de LIME que permite explicar modelos de reconocimiento de voz.
+
+Por un lado, mediante la técnica de borrado de representaciones se identificó visualmente la importancia de las frecuencias bajas en el desempeño de Whisper. Por el otro, SLIME evidencia los segmentos de audio que son más relevantes para una transcripción precisa. Adicionalmente, SLIME ofrece explicaciones escuchables, lo que permite una interpretación más intuitiva del proceso de toma de decisiones del modelo.
+
+Estos resultados son fundamentales para el diseño de sistemas ASR más precisos y transparentes, esenciales para su aplicación confiable en escenarios del mundo real. Además, el estudio sugiere que la incorporación de estrategias de aprendizaje por refuerzo en la explicabilidad de modelos de audio constituye una vanguardista y prometedora dirección de investigación.
 
 \printbibliography
 
