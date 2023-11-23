@@ -86,9 +86,10 @@ Bridging Bridging Acoustic Transparency in Speech
 # 2. Marco teórico
 
 1. Speech recognition.
-2. Métricas de evaluación.
-3. Representación del sonido (señal, espectrograma, y mfcc).
-4. Whisper.
+2.  Representación del sonido (señal, espectrograma, y mfcc).
+3. Métricas de evaluación.
+4. Open ASR Leaderboard.
+5. Whisper.
 
 ---
 <!--_header: Marco teórico-->
@@ -109,8 +110,28 @@ $$
 
 
 ---
+
 <!--_header: Marco teórico-->
-## 2.2 Métricas de evaluación
+## 2.2 Representación del sonido
+
+<div class="center-align">
+
+![w:400 h:200](images/waveshow.png) ![w:400 h:200](images/spectogram_1.png)
+
+![w:400 h:200](images/whisper_mel.png)
+
+</div>
+
+<div class="center-align" style="font-size: 21px">
+
+**Figura 2**: Distintas representaciones del sonido.
+(Waveform, Spectogram and Log Mel Spectogram)
+
+</div>
+
+---
+<!--_header: Marco teórico-->
+## 2.3 Métricas de evaluación
 
 Considerando la siguiente notación:
 
@@ -135,26 +156,45 @@ Podemos definir las siguientes métricas:
 
 ---
 <!--_header: Marco teórico-->
-## 2.3 Representación del sonido
+## 2.4 Open ASR Leaderboard
+
+* Competencia basada en el paper **ESB: A Benchmark For Multi-Domain End-to-End Speech Recognition (Sanchit et al. 2022).**
+* Metricas Evaluadas:
+  * WER (Word Error Rate).
+  * RTF (Real Time Factor).
+
+---
 
 <div class="center-align">
 
-![w:400 h:200](images/waveshow.png) ![w:400 h:200](images/spectogram_1.png)
-
-![w:400 h:200](images/whisper_mel.png)
+![w:976 h:409](images/datasets.png)
 
 </div>
 
 <div class="center-align" style="font-size: 21px">
 
-**Figura 2**: Distintas representaciones del sonido.
-(Waveform, Spectogram and Log Mel Spectogram)
+**Figura 3**: Datasets ESB.
 
 </div>
 
 ---
+
+<div class="center-align">
+
+![w:1000 h:600](images/open_asr_leaderboard.png)
+
+</div>
+
+<div class="center-align" style="font-size: 21px">
+
+**Figura 4**: Open ASR Leaderboard, Fuente: Hugginface
+
+</div>
+
+---
+
 <!--_header: Marco teórico-->
-## 2.4 Whisper
+## 2.5 Whisper
 
 <div class="center-align">
 
@@ -164,7 +204,7 @@ Podemos definir las siguientes métricas:
 
 <div class="center-align" style="font-size: 21px">
 
-**Figura 3**: Arquitectura Whisper, Fuente: OpenAI
+**Figura 5**: Arquitectura Whisper, Fuente: OpenAI
 </div>
 
 ---
@@ -230,7 +270,7 @@ El entorno de experimentación se define a continuación:
 
 <div class="center-align" style="font-size: 21px">
 
-**Figura 4**: SLIME.
+**Figura 6**: SLIME.
 </div>
 
 ---
@@ -252,7 +292,7 @@ El entorno de experimentación se define a continuación:
 
 <div class="center-align" style="font-size: 21px">
 
-**Figura 5**: Borrado de Representaciones y Ejemplo con un Espectrograma Real.
+**Figura 7**: Borrado de Representaciones y Ejemplo con un Espectrograma Real.
 </div>
 
 ---
@@ -275,7 +315,7 @@ El entorno de experimentación se define a continuación:
 
 <div class="center-align" style="font-size: 21px">
 
-**Figura 6**: Coeficientes de $g$
+**Figura 8**: Coeficientes de $g$
 </div>
 
 </div>
@@ -286,7 +326,7 @@ El entorno de experimentación se define a continuación:
 
 <div class="center-align" style="font-size: 21px">
 
-**Figura 7**: Importancias SLIME
+**Figura 9**: Importancias SLIME
 </div>
 </div>
 
@@ -317,7 +357,7 @@ El entorno de experimentación se define a continuación:
 
 <div class="center-align" style="font-size: 21px">
 
-**Figura 8**: Importancia de las dimensiones del espectrograma
+**Figura 10**: Importancia de las dimensiones del espectrograma
 </div>
 
 > En la primera visualización se consideran todas las dimensiones.
