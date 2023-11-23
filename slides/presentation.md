@@ -54,6 +54,7 @@ Bridging Bridging Acoustic Transparency in Speech
 4. Propuesta de solución.
 5. Resultados.
 6. Conclusiones.
+7. Referencias.
 
 ---
 <!--_header: Definición del problema-->
@@ -315,18 +316,18 @@ El entorno de experimentación se define a continuación:
 
 <div class="center-align" style="font-size: 21px">
 
-**Figura 8**: Coeficientes de $g$
+**Figura 8**: Coeficientes Regresión Lineal
 </div>
 
 </div>
 
 <div class="center-align">
 
-![w:400 h:250](images/slime.png)
+![w:400 h:250](images/gini.png)
 
 <div class="center-align" style="font-size: 21px">
 
-**Figura 9**: Importancias SLIME
+**Figura 9**: Importancia de Gini
 </div>
 </div>
 
@@ -384,6 +385,22 @@ Como trabajo futuro se propone:
 * Aprendizaje reforzado para aprender la mejor representación de los datos.
 
 ---
+<!-- _paginate: skip -->
+
+# 7. Referencias
+
+1. Wu, X., Bell, P., & Rajan, A. (2023). Explanations for Automatic Speech Recognition. In *ICASSP 2023 - 2023 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)* (pp. 1-5). doi: 10.1109/ICASSP49357.2023.10094635.
+2. Wu, X., Bell, P., & Rajan, A. (2023). Can We Trust Explainable AI Methods on ASR? An Evaluation on Phoneme Recognition. arXiv:2305.18011 [cs.CL].
+3. Haunschmid, V., Manilow, E., & Widmer, G. (2020). audioLIME: Listenable Explanations Using Source Separation. *CoRR*, vol. abs/2008.00582. Retrieved from https://arxiv.org/abs/2008.00582
+
+---
+
+4. Radford, A. et al. (2022). Robust Speech Recognition via Large-Scale Weak Supervision.
+5. Li, J. et al. (2017). Understanding Neural Networks through Representation Erasure.
+6. Gandhi, S. et al. (2022). ESB: A Benchmark For Multi-Domain End-to-End Speech Recognition.
+
+---
+
 <!-- _paginate: skip -->
 
 <div class="center-align">
