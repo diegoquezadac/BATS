@@ -278,15 +278,9 @@ en la Figura \ref{fig:re-diagram} se presenta un diagrama simplificado del algor
 
 \subsubsection{SLIME}
 
-Para explicar las transcripciones de Whisper, y tomando inspiración en LIME-TS \cite{wu2023trust}, se propone el método de explicablilidad \textbf{SLIME}.
+Para explicar las transcripciones de Whisper, y tomando inspiración en LIME-TS \cite{wu2023trust}, se propone el método de explicablilidad \textbf{SLIME} descrito en el Algoritmo \ref{alg:slime}.
 
-SLIME fragmenta una grabación de audio en segmentos y considera como representación interpretable un vector booleano que indica la presencia o ausencia de cada segmento. Utilizando esta representación, se genera una vecindad apagando segmentos de manera aleatoria. Cada instancia de la vecindad es transcrita por Whisper, y mediante la distancia de Levenshtein entre la transcripción perturbada y la original se cuantifica el impacto de los silencios, proporcionando una base para una comparación cuantitativa entre las transcripciones. Finalmente, se ajusta un modelo explicable considerando la representación interpretable de los audios como entrada y la distancia de Levenshtein como salida.
-
-Debido a la alta demanda computacional que implica obtener predicciones de Whisper, se limitó la vecindad exploratoria a 100 combinaciones. Esto estableció un equilibrio entre la profundidad del análisis y las restricciones prácticas.
-
-Los coeficientes resultantes de la regresión lineal ofrecen una interpretación directa de la relevancia de cada segmento de audio. Los segmentos asociados con coeficientes negativos son clave; su presencia es vital para mantener la fidelidad de la transcripción original, mientras que su ausencia es indicativa de un incremento en la distancia de Levenshtein, reflejando transcripciones que se desvían de la original. Esta información es útil para discernir las partes del audio que el modelo considera importantes para una transcripción precisa. El siguiente paso es mejorar la segmentación del audio, buscando métodos que puedan captar con mayor precisión las unidades lingüísticas significativas y mejorar la interpretación de las decisiones del modelo.
-
-En el algoritmo \ref{alg:slime} se resume el algoritmo propuesto para obtener las explicaciones de Whisper mediante LIME.
+SLIME explica modelos de reconocimiento de voz al considerar como representación interpretable una máscara booleana que indica la presencia o ausencia de cada segmento de audio. El conjunto de entrenamiento $S$ para el modelo explicable $g$ se obtiene al generar distintas máscaras booleanas $\bm{Z'}$ desde una distribución binomial, aplicarlas al audio original y calcular las distancias de Levenshtein $\bm{d}$ entre la transcripción del audio original y las transcripciones de los audios perturbados por las máscaras. Finalmente, se ajusta un modelo explicable $g$ a los datos de entrenamiento $S$. En esta investigación se consideran dos modelos interpretables: una regresión lineal y un árbol de decisión. Es importante destacar que la representación del audio original en el espacio interpretable es una máscara booleana de únicamente unos, pues, todos los segmentos de audio están presentes. Adicionalmente, se puede considerar que las muestras de la distribución binomial $\bm{Z}'$ son la vecindad de la instancia de interés.
 
 \begin{algorithm}[H]
 \caption{SLIME}
@@ -297,12 +291,10 @@ En el algoritmo \ref{alg:slime} se resume el algoritmo propuesto para obtener la
 \State $n$ $\gets$ Number of segments of 100 ms in audio
 \State $x \gets$ Original audio instance
 \State $y \gets f(x)$
-\State $x' \gets$ Vector of $n$ ones
-\State $P \gets$ Generate 100 Binomial perturbations of $x'$
-\For{each $p$ in $P$}
-    \State $z \gets$ Apply $p$ to $x$
+\State $\bm{Z}' \gets$ Sample from Binomial distribution
+\For{each $z'$ in $\bm{Z}'$}
+    \State $z \gets$ Apply $z'$ to $x$
     \State $d \gets$  Levenshtein distance between $y$ and $f(z)$
-    \State $z' \gets$ Apply random mask to $x'$
     \State $S \gets S \cup (z', d)$
 \EndFor
 \State $g \gets$ Fit $g$ to $S$
@@ -311,14 +303,13 @@ En el algoritmo \ref{alg:slime} se resume el algoritmo propuesto para obtener la
 \label{alg:slime}
 \end{algorithm}
 
-Adicionalmente, en la Figura \ref{fig:diagram} se presenta un diagrama simplificado del algoritmo:
+Como se puede apreciar en la línea 10 del Algoritmo \ref{alg:slime}, para cada audio perturbado $z$ es necesario computar la transcripción con Whisper. Debido a la alta demanda computacional que implica obtener predicciones de Whisper, se limitó la vecindad a 100 muestras. Adicionalmente, en la Figura \ref{fig:diagram} se presenta un diagrama simplificado del Algoritmo \ref{alg:slime}.
 
 \begin{figure}[ht]
 \centerline{\includegraphics[width=0.5\textwidth]{./images/diagram.png}}
 \caption{SLIME: Funcionamiento}
 \label{fig:diagram}
 \end{figure}
-
 
 \section{Resultados} \label{6-Results}
 
@@ -337,21 +328,23 @@ Como modelo se utilizó whisper-tiny con 39 Millones de parámetros.
 
 \subsection{SLIME}
 
-Consideremos una grabación de audio $x$ cuyo contenido es \textit{it is a busy market town that serves a large surrounding area}. Al aplicar SLIME considerando a esta grabación se obtiene la explicación de la figura \ref{fig:coefficients}.
+Consideremos una grabación de audio $x$ cuyo contenido es ``\textit{it is a busy market town that serves a large surrounding area}``. Al aplicar SLIME considerando como modelo explicable una regresión lineal se obtiene la explicación de la Figura \ref{fig:coefficients}. Un coeficiente negativo asociado a un segmento de audio indica que al considerarlo la distancia respecto a la transcripción original disminuye. En base a este criterio, los segmentos 2, 4, y 9 son los más importantes. Al reproducir el segmento 4 se puede entender el porqué de su importancia; en este segmento se escucha claramente ``town that``, por ende, su ausencia implica un notable aumento en la distancia de Levenshtein.
 
 \begin{figure}[ht]
 \centerline{\includegraphics[width=0.5\textwidth]{./images/coefficients.png}}
-\caption{SLIME: Coeficientes del modelo explicable}
+\caption{SLIME: Coeficientes Regresión Lineal}
 \label{fig:coefficients}
 \end{figure}
 
-Tal como se destacó previamente, la presencia de un coeficiente negativo señala la importancia de un segmento; esto se debe a que su eliminación incrementa la discrepancia de la transcripción respecto a la original, según se mide por la distancia de Levenshtein. Para cuantificar la importancia de cada segmento en una escala de 0 a 1, los coeficientes negativos se proyectan en el eje x y luego se normalizan todos los valores. La figura \ref{fig:importance} ilustra esta normalización, mostrando la importancia asignada a cada segmento.
+Alternativamente, al aplicar SLIME considerando como modelo explicable un árbol de decisión se obtiene la explicación de la Figura \ref{fig:gini}. En este caso, la importancia asociada a cada segmento se calcula como la reducción de la impureza de Gini que se obtiene al considerar el segmento de audio. En base a este criterio, los segmentos 10, 4 y 0 son los más importantes. Al reproducir el segmento 10 se puede entender el porqué de su importancia; en este segmento se escucha claramente la palabra ``area``. Adicionalmente, en el segmento 2 se escuchan claramente las palabras ``it is``.
 
 \begin{figure}[ht]
-\centerline{\includegraphics[width=0.5\textwidth]{./images/slime.png}}
-\caption{SLIME: Importancias}
-\label{fig:importance}
+\centerline{\includegraphics[width=0.5\textwidth]{./images/gini.png}}
+\caption{SLIME: Importancias Árbol de Decisión}
+\label{fig:gini}
 \end{figure}
+
+Es importante mencionar que las importancias obtenidas al utilizar un modelo de árbol de decisión son más estables. La regresión lineal, al ser un modelo muy simple, no ajusta bien a los datos de entrenamiento y, por ende, las importancias obtenidas son más sensibles a pequeñas variaciones en los datos de entrenamiento.
 
 \subsection{Borrado de representaciones}
 
@@ -404,7 +397,7 @@ También podemos observar que hay importancias negativas, esto quiere decir que 
 
 Mirando hacia el futuro, se está desarrollando un enfoque innovador que involucra el uso de modelos de aprendizaje por refuerzo en el campo de la explicabilidad en modelos de audio de machine learning. Este enfoque se centra en la capacidad del modelo para aprender de manera autónoma a preservar o eliminar aquellas características específicas (dimensiones, segmentos temporales y ambas juntas) que contribuyen al mejoramiento del desempeño de Whisper. Al hacerlo, no solo se espera mejorar la eficiencia y la precisión de los modelos de audio, sino también incrementar su transparencia y comprensibilidad. Este método promete ofrecer una nueva perspectiva en la explicabilidad, permitiendo una introspección más profunda en los procesos de toma de decisiones del modelo y una mejor interpretación de sus resultados. A medida que avanzamos, la integración de estas técnicas de aprendizaje por refuerzo en la explicabilidad de modelos de machine learning abre un emocionante camino para futuras investigaciones y aplicaciones prácticas.
 
-Adicionalmente, se propone la creación la librería \href{https://github.com/diegoquezadac/BATS}{BATS} para la explicación de modelos de reconocimiento de voz, la cual se encuentra en desarrollo y se espera que esté disponible en los próximos meses.
+Finlamente, se propone la creación la librería \href{https://github.com/diegoquezadac/BATS}{BATS} para la explicación de modelos de reconocimiento de voz, la cual se encuentra en desarrollo y se espera que esté disponible en los próximos meses.
 
 \section{Conclusiones} \label{8-Conclusions}
 
