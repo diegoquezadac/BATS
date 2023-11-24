@@ -37,7 +37,7 @@ img[alt~="center"] {
 
 # BATS
 
-Bridging Bridging Acoustic Transparency in Speech
+Bridging Acoustic Transparency in Speech
 
 
 **Autores**: Felipe Cisternas y Diego Quezada
@@ -249,8 +249,7 @@ El entorno de experimentación se define a continuación:
 * GPU: Apple GPU 16 Cores.
 * RAM: 16GB LPDDR5.
 * OS: macOS 14.0.
-* Software: Python 3.10, PyTorch 2.1.0, 4.3.5.0.
-
+* Software: Python 3.10, PyTorch 2.1.0
 
 ---
 <!--_header: Propuesta de solución-->
