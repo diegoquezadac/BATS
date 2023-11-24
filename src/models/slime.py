@@ -2,6 +2,7 @@ import numpy as np
 import whisper
 import nltk
 import sounddevice as sd
+from pydub import AudioSegment
 from typing import Any
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
@@ -16,7 +17,6 @@ class SLIME:
     def __init__(
         self, f: Any, g: Any, sample_rate: int = 16_000, segment_length: int = 500
     ) -> None:
-        
         self.f = f
         self.g = g
         # Sample rate unit: Hz
@@ -31,7 +31,26 @@ class SLIME:
 
     def _segment_audio(self, x: np.ndarray) -> np.ndarray:
         segment_length = int((self.segment_length / 1000) * self.sample_rate)
-        return np.array_split(x, np.arange(segment_length, len(x), segment_length))
+        segments = np.array_split(x, np.arange(segment_length, len(x), segment_length))
+
+        # Save segments as mp3 files using AudioSegment using np.int16
+        for index, segment in enumerate(segments):
+            segment = np.int16(segment * (2**15 - 1))
+
+            audio_segment = AudioSegment(
+                segment.tobytes(),
+                frame_rate=self.sample_rate,
+                sample_width=segment.dtype.itemsize,
+                channels=1,
+            )
+
+            audio_segment.export(
+                f"./tmp/segment_{index}.mp3", format="mp3"
+            )
+
+        print(f"Segments saved to ./tmp/segment_*.mp3")
+
+        return segments
 
     def _apply_mask(self, segments, mask) -> np.ndarray:
         masked_audio = np.concatenate(
@@ -51,6 +70,7 @@ class SLIME:
 
     def fit(self, x: np.ndarray, n_perturbations: int = 100):
         segments = self._segment_audio(x)
+
         transcription = self._transcribe(x)
         n_segments = len(segments)
         perturbation_matrix = np.random.binomial(
@@ -66,7 +86,7 @@ class SLIME:
         self.X = perturbation_matrix
         self.y = levenshtein_distances
         self.n_segments = n_segments
-        
+
         self.g.fit(self.X, self.y)
 
         if isinstance(self.g, LinearRegression):
@@ -75,7 +95,7 @@ class SLIME:
             self.coef = self.g.feature_importances_
         else:
             raise NotImplementedError
-        
+
         self._compute_importance()
 
     def explain(self, x: np.ndarray):
